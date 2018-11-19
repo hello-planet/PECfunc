@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript">
+        onload=function(){
+            setInterval(go, 1000);
+        };
+        var x=3;
+        function go(){
+            x--;
+            if(x>0){
+                document.getElementById("sp").innerHTML=x;
+            }else{
+                location.href='dashboard.html';
+            }
+        }
+    </script>
+    <meta charset="UTF-8">
+    <title>Successful</title>
+</head>
+<body>
+<header>
+    <h1 align="center">Successful!</h1>
+</header>
+<div align="center">
+    <p>Now for purchase and sell</p>
+    <p>This page will be refreshed after 3 seconds.</p>
+</div>
+</body>
+</html>

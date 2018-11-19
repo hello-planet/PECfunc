@@ -1,0 +1,22 @@
+{
+  "name": "powexchain",
+  "version": "1.0.0",
+  "description": "for interaction between front end and DB in powexchain",
+  "main": "index.js",
+  "scripts": {
+    "standard": "standard && node $PWD/*.js",
+    "init": "node init.js",
+    "runtest": "node test.js"
+  },
+  "keywords": [
+    "powexchain"
+  ],
+  "author": "helloplanet <zyk8gua@126.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sell</title>
+    <script src="js/tools.js" type="text/javascript"></script>
+</head>
+<body>
+<header>
+    <h1 align="center">SELL</h1>
+</header>
+<div align="right">
+    <a href="dashboard.html">return</a> | <a href="index.html">logout</a>
+</div>
+<hr>
+<nav>
+    <div align="center">
+        <a href="account.html">ACCOUNT</a> | <a href="pool.html">POOL</a> | <a
+            href="delivery.html">SELL</a>
+    </div>
+</nav>
+<br/>
+<form action="success.html" method="POST">
+    <table align="center">
+        <tr>
+            <td align="left">value:</td>
+            <td><input type="text" name="value" required="required"/></td>
+        </tr>
+        <tr>
+            <td align="left">text:</td>
+            <td><textarea name="evaluate" rows="10" cols="30"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><input type="submit" value="Generate"
+                                                  onclick="getTimestamp()"/> <input type="reset" value="Reset"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

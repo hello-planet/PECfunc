@@ -1,0 +1,44 @@
+{
+  "request": {
+    "signup": {
+      "account": "",
+      "password": ""
+    },
+    "login": {
+      "account": "",
+      "password": "",
+      "time": ""
+    },
+    "account": {
+      "sessionId": "",
+      "msg": "accountInfo"
+    },
+    "pool": {
+      "sessionId": "",
+      "msg": "poolInfo"
+    },
+    "purchase": {
+      "sessionID": "",
+      "msg": "purchase",
+      "timestampBuy": "",
+      "tx": [
+        {
+          "txhash": ""
+        }
+      ]
+    },
+    "delivery": {
+      "sessionID": "",
+      "msg": "delivery",
+      "timestampSell": "",
+      "tx": [
+        {
+          "value": "",
+          "amount": "",
+          "type": "wind/light/water",
+          "inputData": ""
+        }
+      ]
+    }
+  }
+}
