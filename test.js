@@ -11,11 +11,13 @@ redisClient.on('error', function (err) {
 
 // console.log(config.global)
 
-const secret = 'abcdefg'
+var time = new Date().getTime()
+console.log(time)
 
-const hash = crypto.createHash('sha256').update('abcdefg').digest('hex')
-
-console.log(hash)
+// // hash the string
+// const secret = 'abcdefg'
+// const hash = crypto.createHash('sha256').update('abcdefg').digest('hex')
+// console.log(hash)
 
 // // promise way
 // promise.promisifyAll(redis.RedisClient.prototype)

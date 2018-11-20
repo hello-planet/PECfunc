@@ -51,8 +51,8 @@ function showAccount () {
     }
   })
   // TODO new json purchseInfo
-  redisClient.smembers('usr:' + account + ':purchase',function (err,replies) {
-    if(replies){
+  redisClient.smembers('usr:' + account + ':purchase', function (err, replies) {
+    if (replies) {
       replies.forEach(function (reply) {
         redisClient.hget(reply, function (err, reply) {
           if (reply) {
@@ -64,11 +64,10 @@ function showAccount () {
         })
       })
       console.log('get usr:account:purchase status: ' + reply)
-    }else{
+    } else {
       console.log('get usr:account:purchase status: ' + err)
     }
   })
   // TODO write usrInfo
   redisClient.quit()
 }
-

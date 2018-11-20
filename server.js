@@ -1,7 +1,6 @@
 /**
- *  PECfunc index
+ *  PECfunc server
  */
-
 const redis = require('redis')
 const redisClient = redis.createClient(config.redis)
 

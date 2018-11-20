@@ -143,10 +143,10 @@ if msg != 'delivery' | !redis.exists(input.sessionId)
 	return null
 new json deliveryRes
 account = redis.get(input.sessionId)
-to = redis.hget('usr:' + account, 'address')
-powerUnit = redis.get(global:powerUnit)
-blockHeight = redis.get(global:blockHeight)
-nonce = redis.get(global:nonce)
+toAdd = redis.hget('usr:' + account, 'address')
+powerUnit = redis.get('global:powerUnit')
+blockHeight = redis.get('global:blockHeight')
+nonce = redis.get('global:nonce')
 for trans in input.tx[]  //trans = {value, amount, type, inputDate}
 	txHash = hash(acount + time.Now)  //generate the current time
 	// set tx hash
@@ -160,11 +160,11 @@ for trans in input.tx[]  //trans = {value, amount, type, inputDate}
     	'amount', trans.amount, 
     	'type', trans.type, 
     	'from', '', 
-    	'to', to, 
+    	'to', toAdd, 
     	'nonce', nonce, 
     	'inputData', trans.inputData])
 	if (trans.value == 0)
-		redis.hmset('tx:' + txHash, 'value', trans.amount * powUnit)
+		redis.hset('tx:' + txHash, 'value', trans.amount * powerUnit)
 	// change associated accounts' variables
 	redis.hincrby('usr:' + account, deliveryNum, 1)
 	redis.sadd('usr:' + account + ':delivery', txHash )
