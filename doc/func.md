@@ -20,7 +20,13 @@ if redis.exists('usr:' + input.account)
 // set account variables
 address = hash(input.account + input.password)
 password = hash(input.password)
-redis.hmset('usr:' + input.account, ['account', input.account, 'password', password, 'balance', 1000, 'address', address, 'deliveryNum', 0, 'purchaseNum', 0 ])
+redis.hmset('usr:' + input.account, [
+	'account', input.account, 
+	'password', password, 
+	'balance', 1000, 
+	'address', address, 
+	'deliveryNum', 0, 
+	'purchaseNum', 0 ])
 redis.sadd('usr:' + input.account + ":delivery", 'default')
 redis.sadd('usr:' + input.account + ":purchase", 'default')
 redis.set('addr:' + address, input.account)
@@ -144,7 +150,19 @@ nonce = redis.get(global:nonce)
 for trans in input.tx[]  //trans = {value, amount, type, inputDate}
 	txHash = hash(acount + time.Now)  //generate the current time
 	// set tx hash
-    redis.hmset('tx:' + txHash, ['txHash', txHash, 'status', 'waiting', 'blockHeight', blockHeight, 'timestampSell', input.timestampSell, 'timestampBuy', '', 'value', trans.value, 'amount', trans.amount, 'type', trans.type, 'from', '', 'to', to, 'nonce', nonce, 'inputData', trans.inputData])
+    redis.hmset('tx:' + txHash, [
+    	'txHash', txHash, 
+    	'status', 'waiting', 
+    	'blockHeight', blockHeight, 
+    	'timestampSell', input.timestampSell, 
+    	'timestampBuy', '', 
+    	'value', trans.value, 
+    	'amount', trans.amount, 
+    	'type', trans.type, 
+    	'from', '', 
+    	'to', to, 
+    	'nonce', nonce, 
+    	'inputData', trans.inputData])
 	if (trans.value == 0)
 		redis.hmset('tx:' + txHash, 'value', trans.amount * powUnit)
 	// change associated accounts' variables
