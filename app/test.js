@@ -2,7 +2,7 @@
 var redis = require('redis')
 var promise = require('bluebird')
 const crypto = require('crypto')
-const config = require('./config/config')
+const config = require('../config/config')
 
 redisClient = redis.createClient(config.redis)
 redisClient.on('error', function (err) {

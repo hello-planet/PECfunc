@@ -1,6 +1,6 @@
 /* global redisClient */
 var redis = require('redis')
-const config = require('./config/config')
+const config = require('../config/config')
 
 redisClient = redis.createClient(config.redis)
 redisClient.on('error', function (err) {

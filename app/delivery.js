@@ -1,7 +1,7 @@
 /* global redisClient */
 var redis = require('redis')
 var crypto = requrie('crypto')
-const config = require('./config/config')
+const config = require('../config/config')
 
 // TODO fetch data from request
 var inputData =

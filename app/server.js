@@ -2,6 +2,7 @@
  *  PECfunc server
  */
 const redis = require('redis')
+const config = require('../config/config')
 const redisClient = redis.createClient(config.redis)
 
 redisClient.on('error', function (err) {

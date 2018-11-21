@@ -1,7 +1,7 @@
 /* global redisClient */
 var redis = require('redis')
 var crypto = require('crypto')
-const config = require('./config/config')
+const config = require('../config/config')
 
 var existing = 0
 
