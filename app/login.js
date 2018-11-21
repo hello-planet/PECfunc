@@ -2,7 +2,7 @@
 var redis = require('redis')
 var hash = require('hash.js')
 var crypto = require('crypto')
-const config = require('./conf/config')
+const config = require('./config/config')
 
 // TODO fetch data from request
 var inputData =
