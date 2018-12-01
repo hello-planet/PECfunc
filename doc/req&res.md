@@ -8,23 +8,33 @@
 {
     "request": {
         "signup": {
+            "_method": "POST",
+            "_path": "/signup",
             "account": "",
             "password": ""
         },
         "login": {
+            "_method": "POST",
+            "_path": "/login",
             "account": "",
             "password": "",
             "time": ""
         },
         "account": {
+            "_method": "GET",
+            "_path": "/account",
             "sessionId": "",
             "msg": "accountInfo"
         },
         "pool": {
+            "_method": "GET",
+            "_path": "/pool",
             "sessionId": "",
             "msg": "poolInfo"
         },
         "purchase": {
+            "_method": "PUT",
+            "_path": "/purchase",
             "sessionID": "",
             "msg": "purchase",
             "timestampBuy": "",
@@ -35,6 +45,8 @@
             ]
         },
         "delivery": {
+            "_method": "POST",
+            "_path": "/delivery",
             "sessionID": "",
             "msg": "delivery",
             "timestampSell": "",
@@ -46,6 +58,12 @@
                     "inputData": ""
                 }
             ]
+        },
+        "logout": {
+            "_method": "DELETE",
+            "_path": "/logout",
+            "sessionID": "",
+            "msg": "logout"
         }
     }
 }
@@ -150,6 +168,9 @@
                     "msg": "succeed/failed"
                 }
             ]
+        },
+        "logout": {
+            "msg": ""
         }
     }
 }

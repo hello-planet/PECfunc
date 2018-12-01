@@ -150,19 +150,19 @@ nonce = redis.get('global:nonce')
 for trans in input.tx[]  //trans = {value, amount, type, inputDate}
 	txHash = hash(acount + time.Now)  //generate the current time
 	// set tx hash
-    redis.hmset('tx:' + txHash, [
-    	'txHash', txHash, 
-    	'status', 'waiting', 
-    	'blockHeight', blockHeight, 
-    	'timestampSell', input.timestampSell, 
-    	'timestampBuy', '', 
-    	'value', trans.value, 
-    	'amount', trans.amount, 
-    	'type', trans.type, 
-    	'from', '', 
-    	'to', toAdd, 
-    	'nonce', nonce, 
-    	'inputData', trans.inputData])
+	redis.hmset('tx:' + txHash, [
+		'txHash', txHash,
+		'status', 'waiting', 
+		'blockHeight', blockHeight,
+		'timestampSell', input.timestampSell, 
+		'timestampBuy', '', 
+		'value', trans.value,
+		'amount', trans.amount, 
+		'type', trans.type, 
+		'from', '', 
+		'to', toAdd, 
+		'nonce', nonce, 
+		'inputData', trans.inputData])
 	if (trans.value == 0)
 		redis.hset('tx:' + txHash, 'value', trans.amount * powerUnit)
 	// change associated accounts' variables

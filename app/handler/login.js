@@ -44,6 +44,14 @@ function login () {
         console.log('set k-v sessionId-account error: ' + err)
       }
     })
+    // persit the usr login information for 30 mins
+    redisClient.expire(sessionID, 1800, function (err, reply) {
+      if (reply) {
+        console.log('set sessionId-account expiration status: ' + reply)
+      } else {
+        console.log('set sessionId-account expiration error: ' + err)
+      }
+    })
     // TODO write loginRes
   } else {
     // TODO write loginRes

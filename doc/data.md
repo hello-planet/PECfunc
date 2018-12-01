@@ -14,7 +14,8 @@
         "txList": [],
         "blockHeight": "",
         "nonce": "",
-        "powerUnit": ""
+        "powerUnit": "",
+        "_comment": "In redis server, usrNum, poolNum, txNum, blockHeight, nonce and powerUnit come to be 'String' type, while usrList, poolList, finishList, txList are store in 'Set' type."
     }
 }
 ```
@@ -31,7 +32,8 @@
     	"deliveryNum": "",
     	"purchaseNum": "",
     	"deliveryList": [],
-    	"purchaseList": []
+        "purchaseList": [],
+        "_comment": "In redis server, partial usrinfo associated with one account will be stored in 'Hash' type, except for deliveryList and purchaseList, which shown in 'Set' type. Corresponding keys about an account are 'usr:$account', 'usr:$account:deliveryList' and 'usr:$account:purchaseList' respectively."
     }
 }
 ```
@@ -52,7 +54,8 @@
         "from": "",
         "to": "",
         "nonce": "",
-        "inputData": ""
+        "inputData": "",
+        "_comment": "In redis server, all txinfo associated with one transaction will be stored in 'Hash' type. The key of tx is 'tx:$txHash'."
     }
 }
 ```
@@ -64,7 +67,8 @@
     "address-account": [
         {
             "address": "",
-            "account": ""
+            "account": "",
+            "_comment": "In redis server, all address-account pairs will be stored in 'String' type. The key is 'addr:$address'."
         }
     ]
 }
@@ -77,7 +81,8 @@
     "sessionId-account": [
         {
             "sessionId": "",
-            "account": ""
+            "account": "",
+            "_comment": "In redis server, all sessionId-account pairs will be stored in 'String' type. The key is 'id:$sessionId'."
         }
     ]
 }

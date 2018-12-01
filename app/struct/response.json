@@ -53,7 +53,7 @@
         {
           "txHash": "",
           "status": "waiting",
-          "blockheight": "",
+          "blockhight": "",
           "timestampSell": "",
           "timestampBuy": "",
           "value": "",
@@ -94,6 +94,9 @@
           "msg": "succeed/failed"
         }
       ]
+    },
+    "logout": {
+      "msg": ""
     }
   }
 }

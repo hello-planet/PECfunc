@@ -1,16 +1,14 @@
 /* global redisClient */
 var redis = require('redis')
-var promise = require('bluebird')
 const crypto = require('crypto')
-const config = require('../config/config')
+const config = require('./config/config')
 
 redisClient = redis.createClient(config.redis)
 redisClient.on('error', function (err) {
   console.log('error:' + err)
 })
 
-// console.log(config.global)
-
+// js date time
 var time = new Date().getTime()
 console.log(time)
 
@@ -29,7 +27,7 @@ console.log(time)
 //   })
 // }
 
-// // existing problem
+// // redis data existing problem
 // var existing = false
 // console.log('before: ' + existing)
 // redisClient.exists('a', function (err, reply) {
