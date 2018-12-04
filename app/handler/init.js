@@ -1,61 +1,56 @@
 /* global redisClient */
-var redis = require('redis')
 const config = require('../config/config')
+const color = require('../utils/color')
 
-redisClient = redis.createClient(config.redis)
-redisClient.on('error', function (err) {
-  console.log('error:' + err)
-})
-
-redisClient.on('connect', initGlobal)
-
-function initGlobal () {
+exports.init = function (redisClient) {
+  console.log(color.log('----------server initialization----------'))
   // flush all
   // TODO check the existing data and persist them
   redisClient.flushall()
 
   // set global variables
   redisClient.mset(
-    'global:usrNum', 0,
-    'global:txNum', 0,
-    'global:poolNum', 0,
-    'global:blockHeight', 1,
-    'global:nonce', 1117,
-    'global:powerUnit', 0.5,
+    'global:usrNum', config.global.usrNum,
+    'global:txNum', config.global.txNum,
+    'global:poolNum', config.global.poolNum,
+    'global:blockHeight', config.global.blockHeight,
+    'global:nonce', config.global.nonce,
+    'global:powerUnit', config.global.powerUnit,
     function (err, reply) {
       if (reply) {
-        console.log('global values status: ' + reply)
+        console.log(color.action('global strings status: ' + reply))
       } else {
-        console.log('error: ' + err)
+        console.log(color.error('global strings error: ' + err))
       }
     })
+
   redisClient.sadd('global:usrList', 'default', function (err, reply) {
     if (reply) {
-      console.log('usrList status: ' + reply)
+      console.log(color.action('usrList set status: ' + reply))
     } else {
-      console.log('error: ' + err)
+      console.log(color.error('usrList set error: ' + err))
     }
   })
   redisClient.sadd('global:txList', 'default', function (err, reply) {
     if (reply) {
-      console.log('txList status: ' + reply)
+      console.log(color.action('txList set status: ' + reply))
     } else {
-      console.log('error: ' + err)
+      console.log(color.error('txList set error: ' + err))
     }
   })
   redisClient.sadd('global:poolList', 'default', function (err, reply) {
     if (reply) {
-      console.log('poolList status: ' + reply)
+      console.log(color.action('poolList set status: ' + reply))
     } else {
-      console.log('error: ' + err)
+      console.log(color.error('poolList set error: ' + err))
     }
   })
   redisClient.sadd('global:finishList', 'default', function (err, reply) {
     if (reply) {
-      console.log('finishList status: ' + reply)
+      console.log(color.action('finishList set status: ' + reply))
     } else {
-      console.log('error: ' + err)
+      console.log(color.error('finishList set error: ' + err))
     }
   })
-  redisClient.quit()
+  console.log(color.log('----------server initialization----------'))
 }

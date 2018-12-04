@@ -1,12 +1,13 @@
 {
-  "name": "powexchain",
+  "name": "pec-server",
   "version": "1.0.0",
-  "description": "for interaction between front end and DB in powexchain",
+  "description": "Centralized server implementation for interaction between front-end and DB in powexchain project.",
   "main": "server.js",
   "scripts": {
     "start": "node app/server.js",
     "standard": "standard && node $PWD/*.js",
-    "init": "node init.js"
+    "dev": "nodemon app/server.js",
+    "forever": "forever app/server.js"
   },
   "keywords": [
     "powexchain"
@@ -17,8 +18,15 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
+    "forever-monitor": "^1.7.1",
+    "lightship": "^1.3.0",
     "method-override": "^3.0.0",
+    "path": "^0.12.7",
+    "proxy-addr": "^2.0.4",
     "redis": "^2.8.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "forever": "^0.15.3",
+    "nodemon": "^1.18.7"
+  }
 }

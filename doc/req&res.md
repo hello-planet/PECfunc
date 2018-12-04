@@ -1,6 +1,6 @@
 # Request & Response
 
-
+All CRUD operations conducted via RESTful(alike) HTTP requests.
 
 ### request
 
@@ -9,32 +9,32 @@
     "request": {
         "signup": {
             "_method": "POST",
-            "_path": "/signup",
+            "_path": "/usr/signup",
             "account": "",
             "password": ""
         },
         "login": {
             "_method": "POST",
-            "_path": "/login",
+            "_path": "/usr/login",
             "account": "",
             "password": "",
             "time": ""
         },
         "account": {
             "_method": "GET",
-            "_path": "/account",
+            "_path": "/usr/account",
             "sessionId": "",
             "msg": "accountInfo"
         },
         "pool": {
             "_method": "GET",
-            "_path": "/pool",
+            "_path": "/tx/pool",
             "sessionId": "",
             "msg": "poolInfo"
         },
         "purchase": {
             "_method": "PUT",
-            "_path": "/purchase",
+            "_path": "/tx/purchase",
             "sessionID": "",
             "msg": "purchase",
             "timestampBuy": "",
@@ -46,7 +46,7 @@
         },
         "delivery": {
             "_method": "POST",
-            "_path": "/delivery",
+            "_path": "/tx/delivery",
             "sessionID": "",
             "msg": "delivery",
             "timestampSell": "",
@@ -61,7 +61,7 @@
         },
         "logout": {
             "_method": "DELETE",
-            "_path": "/logout",
+            "_path": "/usr/logout",
             "sessionID": "",
             "msg": "logout"
         }

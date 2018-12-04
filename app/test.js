@@ -1,6 +1,8 @@
-/* global redisClient */
+/**
+ * global redisClient
+ */
 var redis = require('redis')
-const crypto = require('crypto')
+// const crypto = require('crypto')
 const config = require('./config/config')
 
 redisClient = redis.createClient(config.redis)
@@ -8,9 +10,14 @@ redisClient.on('error', function (err) {
   console.log('error:' + err)
 })
 
-// js date time
-var time = new Date().getTime()
-console.log(time)
+redisClient.get('a', function (err, reply) {
+  console.log('123 is ' + reply)
+})
+console.log('this is end')
+
+// // js date time
+// var time = new Date().getTime()
+// console.log(time)
 
 // // hash the string
 // const secret = 'abcdefg'
