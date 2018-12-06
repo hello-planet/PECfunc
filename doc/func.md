@@ -151,7 +151,7 @@ for trans in input.tx[]  //trans = {value, amount, type, inputDate}
 	txHash = hash(acount + time.Now)  //generate the current time
 	// set tx hash
 	redis.hmset('tx:' + txHash, [
-		'txHash', txHash,
+		'txHash', txHash,=
 		'status', 'waiting', 
 		'blockHeight', blockHeight,
 		'timestampSell', input.timestampSell, 

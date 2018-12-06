@@ -28,6 +28,7 @@ $ npm start
 #### TODO
 
 * Security/Authentication
-* Performance Management
+* Performance management
+* Essential optimization
 
 EOF

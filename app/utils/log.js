@@ -1,3 +1,3 @@
-/*
-This is a log function for debug
+/**
+ *  log functions for debug
  */

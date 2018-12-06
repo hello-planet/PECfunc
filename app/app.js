@@ -1,5 +1,5 @@
 /**
- *  pec-server
+ * pec-server
  */
 // express engine
 const express = require('express')
@@ -7,17 +7,20 @@ const {
   createLightship
 } = require('lightship')
 
-// const exphbs = require('express-handlebars')
+// etc lib
 const bodyParser = require('body-parser')
 const proxyaddr = require('proxy-addr')
 const path = require('path')
 const color = require('./utils/color')
 
+// redis lib
 const redis = require('redis')
 const config = require('./config/config')
 
 // handlers
-const initServer = require('./handler/init')
+const serv = require('./handler/serv')
+const usr = require('./handler/usr')
+const tx = require('./handler/tx')
 
 // init redis client
 const redisClient = redis.createClient(config.redis)
@@ -27,10 +30,7 @@ redisClient.on('error', function (err) {
 redisClient.on('connect', function () {
   console.log(color.log('Connected to Redis successfully.'))
 })
-initServer.init(redisClient)
-
-// function server port. appPORT used when 8080 is unavailable
-const port = process.env.appPORT || 8080
+serv.init(redisClient)
 
 // init server
 const app = express()
@@ -39,15 +39,13 @@ const txApp = express.Router()
 
 // body-parser
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
 
 // serve test pages(static files)
-app.use('/test', express.static(path.join(__dirname, '../wwwroot')))
+app.use('/demo', express.static(path.join(__dirname, '../wwwroot')))
 
 // default page(unused)
-app.get('/', function (req, res) {
-  res.send('<h3 align="center">hello planet</h3>')
-})
+app.get('/', serv.index)
 
 // usr middleware funcitons
 usrApp.post('/signup', function (req, res) {})
@@ -65,12 +63,10 @@ app.use('/usr', usrApp)
 app.use('/tx', txApp)
 
 // handle the 404
-app.use(function (req, res, next) {
-    res.status(404).send('<h3 align="center">Seems you\'ve found something unreal on this planet.</h3>')
-  }
-)
+app.use(serv.notfound)
 
-// start server
+// function server port. appPORT used when 8080 is unavailable
+const port = process.env.appPORT || 8080
 const server = app.listen(port, function () {
   console.log(color.log('Server started on ' + port))
 })

@@ -55,6 +55,10 @@ exports.error = function (string) {
 exports.warn = function (string) {
   return yellow(bold(string))
 }
+// for massage segmentation
+exports.seg = function (string) {
+  return blue(bold(string))
+}
 // for server log
 exports.log = blue
 // for crud action

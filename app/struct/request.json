@@ -28,7 +28,7 @@
     "purchase": {
       "_method": "PUT",
       "_path": "/tx/purchase",
-      "sessionID": "",
+      "sessionId": "",
       "msg": "purchase",
       "timestampBuy": "",
       "tx": [
@@ -40,7 +40,7 @@
     "delivery": {
       "_method": "POST",
       "_path": "/tx/delivery",
-      "sessionID": "",
+      "sessionId": "",
       "msg": "delivery",
       "timestampSell": "",
       "tx": [

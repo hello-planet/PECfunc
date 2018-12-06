@@ -90,7 +90,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
                 {
                     "txHash": "",
                     "status": "waiting/succeed",
-                    "blockhight": "",
+                    "blockheight": "",
                     "timestampSell": "",
                     "timestampBuy": "",
                     "value": "",
