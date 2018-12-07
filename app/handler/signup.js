@@ -2,18 +2,18 @@
  * signup operation
  * status: passed
  */
-const crypto = require('crypto')
 // redis client
 const redis = require('redis')
 const bluebird = require('bluebird')
 bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
 const config = require('../config/config')
-const redisClient = redis.createClient(config.redis)
 
+const crypto = require('crypto')
 const logsys = require('../utils/log')
 
 module.exports = async function (req, res) {
+  var redisClient = redis.createClient(config.redis)
   var out = {
     'msg': 'failed'
   }

@@ -1,69 +1,53 @@
 /**
  * login operation
- * status: failed
+ * status: passed
  */
-const crypto = require('crypto')
 // redis client
 const redis = require('redis')
 const bluebird = require('bluebird')
 bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
 const config = require('../config/config')
-const redisClient = redis.createClient(config.redis)
 
+const crypto = require('crypto')
 const logsys = require('../utils/log')
 
 module.exports = async function (req, res) {
-
-}
-
-redisClient = redis.createClient(config.redis)
-redisClient.on('error', function (err) {
-  console.log('error: ' + err)
-})
-
-// TODO new json loginRes
-if (redisClient.exists('usr:' + inputData.account, redis.print())) {
-  redisClient.on('connect', login)
-} else {
-  // TODO write loginRes
-}
-
-// TODO generate the response.
-
-function login () {
-  redisClient.hget('usr:' + inputData.account, 'password', passwd = function (err, reply) {
-    if (reply) {
-      storePassword = reply
-    } else {
-      console.log('get usr password error: ' + err)
-    }
+  var redisClient = redis.createClient(config.redis)
+  var out = {
+    'msg': 'declined'
+  }
+  var existing = 0
+  await redisClient.existsAsync('usr:' + req.body.account).then(function (reply) {
+    existing = reply
+  }).catch(function (err) {
+    console.log('Error: ' + err)
   })
-  getPassword = crypto.createHash('sha256').update(inputData.password).digest('hex')
-  if (storePassword === getPassword) {
-    var sessionID = crypto.createHash('sha256').update(inputData.account + inputData.time).digest('hex')
-    redisClient.set(sessionID, inputData.account, function (err, reply) {
-      if (reply) {
+  if (existing) {
+    var matched = false
+    await redisClient.hgetAsync('usr:' + req.body.account, 'password').then(function (reply) {
+      matched = crypto.createHash('sha256').update(req.body.password).digest('hex') === reply
+    }).catch(function (err) {
+      console.log('Error: ' + err)
+    })
+    if (matched) {
+      var sessionId = crypto.createHash('sha256').update(req.body.account + new Date().getTime()).digest('hex')
+      await redisClient.setAsync('id:' + sessionId, req.body.account).then(function (reply) {
         console.log('set k-v sessionId-account status: ' + reply)
-      } else {
+      }).catch(function (err) {
         console.log('set k-v sessionId-account error: ' + err)
-      }
-    })
-    // persit the usr login information for 30 mins
-    redisClient.expire(sessionID, 1800, function (err, reply) {
-      if (reply) {
+      })
+      // persist sessionId for 30 mins
+      await redisClient.expireAsync('id:' + sessionId, 1800).then(function (reply) {
         console.log('set sessionId-account expiration status: ' + reply)
-      } else {
+      }).catch(function (err) {
         console.log('set sessionId-account expiration error: ' + err)
-      }
-    })
-    // TODO write loginRes
-  } else {
-    // TODO write loginRes
+      })
+      out.msg = 'passed'
+      out['sessionId'] = sessionId
+      logsys.action(req.body.account + ' logged in')
+    }
   }
   redisClient.quit()
-}
-
-module.exports = function (req, res) {
-
+  res.send(out)
 }

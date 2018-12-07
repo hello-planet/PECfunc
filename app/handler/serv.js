@@ -8,7 +8,6 @@ const bluebird = require('bluebird')
 bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
 const config = require('../config/config')
-const redisClient = redis.createClient(config.redis)
 
 const logsys = require('../utils/log')
 
@@ -26,6 +25,7 @@ exports.notfound = function (req, res) {
 
 // init redis data
 exports.init = async function () {
+  var redisClient = redis.createClient(config.redis)
   // test redis service availability
   redisClient.on('error', function (err) {
     logsys.error('Error: ' + err)

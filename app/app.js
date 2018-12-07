@@ -36,7 +36,7 @@ app.get('/', serv.index)
 
 // usr middleware funcitons
 usrApp.post('/signup', require('./handler/signup'))
-usrApp.post('/login', function (req, res) {res.send('login')})
+usrApp.post('/login', require('./handler/login'))
 usrApp.get('/account', function (req, res) {})
 usrApp.delete('/logout', function (req, res) {})
 
