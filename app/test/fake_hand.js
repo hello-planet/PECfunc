@@ -1,8 +1,8 @@
 /**
  * test functions
  */
-const arrayOp = require('../utils/array_op')
 var fakeDB = require('./fake_db')
+const logsys = require('../utils/log')
 
 exports.signup = function (req, res) {
   var out = {
@@ -24,8 +24,9 @@ exports.signup = function (req, res) {
     fakeDB.global.usrNum += 1
     fakeDB.global.usrList.push(req.body.account)
     out.msg = 'succeed'
+    logsys.action(req.body.account + ' signed up')
   }
-  console.log(fakeDB.global.usrList)
+  // console.log(fakeDB.global.usrList)
   res.send(out)
 }
 
@@ -38,8 +39,9 @@ exports.login = function (req, res) {
     out.msg = 'passed'
     out['sessionId'] = req.body.account + '_id'
     fakeDB.id2acc[req.body.account + '_id'] = req.body.account
+    logsys.action(req.body.account + ' logged in')
   }
-  console.log(fakeDB.id2acc)
+  // console.log(fakeDB.id2acc)
   res.send(out)
 }
 
@@ -48,10 +50,11 @@ exports.logout = function (req, res) {
     'msg': 'failed'
   }
   if (fakeDB.id2acc.hasOwnProperty(req.body.sessionId) && req.body.msg === 'logout') {
+    logsys.action(fakeDB.id2acc[req.body.sessionId] + ' logged out')
     delete fakeDB.id2acc[req.body.sessionId]
     out.msg = 'you\'ve log out'
   }
-  console.log(fakeDB.id2acc)
+  // console.log(fakeDB.id2acc)
   res.send(out)
 }
 
@@ -77,6 +80,7 @@ exports.account = function (req, res) {
     for (let item of temp.purchaseList) {
       out['purchase'].push(fakeDB.tx[item])
     }
+    logsys.action(fakeDB.id2acc[req.body.sessionId] + ' requested for account info')
   }
   res.send(out)
 }
@@ -119,6 +123,8 @@ exports.delivery = function (req, res) {
       fakeDB.global.poolList.push(oneTx.txHash)
       out.result.push(oneTx)
     }
+    var logMsg = fakeDB.id2acc[req.body.sessionId] + ' delivered ' + req.body.tx.length + ' transactions'
+    logsys.action(logMsg)
   }
   res.send(out)
 }
@@ -134,6 +140,7 @@ exports.pool = function (req, res) {
     for (let item of fakeDB.global.poolList) {
       out.tx.push(fakeDB.tx[item])
     }
+    logsys.action(fakeDB.id2acc[req.body.sessionId] + ' requested for pool info')
   }
   res.send(out)
 }
@@ -167,12 +174,13 @@ exports.purchase = function (req, res) {
       fakeDB.usr[seller].balance += fakeDB.tx[oneTx.txhash].value
       // global
       fakeDB.global.poolNum -= 1
-      // TODO array removement
-      fakeDB.global.poolList.pop(oneTx.txhash)
+      fakeDB.global.poolList.splice(fakeDB.global.poolList.indexOf(oneTx.txhash), 1)
       fakeDB.global.finishList.push(oneTx.txhash)
       oneTx['msg'] = 'succeed'
       out.result.push(oneTx)
     }
+    var logMsg = fakeDB.id2acc[req.body.sessionId] + ' purchased ' + req.body.tx.length + ' transactions'
+    logsys.action(logMsg)
   }
   res.send(out)
 }

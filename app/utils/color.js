@@ -47,19 +47,18 @@ function bold (string) {
   return styles.bold[0] + string + styles.bold[1]
 }
 
-// for crud error
-exports.error = function (string) {
-  return red(bold(string))
-}
+// for crud action
+exports.action = green
+
+// for server log
+exports.log = blue
+
 // for invalid data operation
 exports.warn = function (string) {
   return yellow(bold(string))
 }
-// for massage segmentation
-exports.seg = function (string) {
-  return blue(bold(string))
+
+// for crud error
+exports.error = function (string) {
+  return red(bold(string))
 }
-// for server log
-exports.log = blue
-// for crud action
-exports.action = green

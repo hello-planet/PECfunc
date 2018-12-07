@@ -27,7 +27,7 @@ module.exports = {
     },
     'bob': {
       'account': 'bob',
-      'password': '654321',
+      'password': '123456',
       'balance': 100,
       'address': 'bob_addr',
       'deliveryNum': 1,
