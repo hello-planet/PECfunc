@@ -71,3 +71,7 @@ function showAccount () {
   // TODO write usrInfo
   redisClient.quit()
 }
+
+module.exports = function (req, res) {
+
+}

@@ -2,13 +2,14 @@
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-PowExChain function interfaces for interaction between front-end and DB from scratch.
+PowExChain function interfaces for interaction between front-end and DB built from scratch.
 
-This project aims to:
+This project aims to constribute:
 
-* back-end demo
+* centralized pec-server back-end demo
 * express build demo
-* basic operation logic
+* basic CRUD operation logic
+* production enviroment build demo
 
 ### How to build
 

@@ -3,6 +3,7 @@
  */
 const color = require('./color')
 const fs = require('fs')
+const path = require('path')
 
 function date () {
   var time = new Date()
@@ -15,8 +16,8 @@ function time () {
 }
 
 function record (string) {
-  var filename = date() + '-ServerLog'
-  fs.writeFile('../../log/' + filename, string + '\n', {flag: 'a'}, function (err) {
+  var filename = date() + '-Server.log'
+  fs.writeFile(path.join(__dirname, '../../log/') + filename, string + '\n', {flag: 'a'}, function (err) {
     if (err) {
       return console.log(color.error(err))
     }
@@ -24,25 +25,25 @@ function record (string) {
 }
 
 exports.action = function (string) {
-  var inputStr = time() + '\t' + string
+  var inputStr = time() + '\t' + 'ACT:\t' + string
   record(inputStr)
   console.log(color.action(inputStr))
 }
 
 exports.log = function (string) {
-  var inputStr = time() + '\t' + string
+  var inputStr = time() + '\t' + 'LOG:\t' + string
   record(inputStr)
   console.log(color.log(inputStr))
 }
 
 exports.warn = function (string) {
-  var inputStr = time() + '\t' + string
+  var inputStr = time() + '\t' + 'WARN:\t' + string
   record(inputStr)
   console.log(color.warn(inputStr))
 }
 
 exports.error = function (string) {
-  var inputStr = time() + '\t' + string
+  var inputStr = time() + '\t' + 'ERR:\t' + string
   record(inputStr)
   console.log(color.error(inputStr))
 }

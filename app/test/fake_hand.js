@@ -34,12 +34,12 @@ exports.login = function (req, res) {
   var out = {
     'msg': 'declined'
   }
-  var flag = !(fakeDB.id2acc.hasOwnProperty(req.body.account + '_id')) && fakeDB.usr.hasOwnProperty(req.body.account) && req.body.password === fakeDB.usr[req.body.account].password
+  var flag = fakeDB.usr.hasOwnProperty(req.body.account) && req.body.password === fakeDB.usr[req.body.account].password
   if (flag) {
     out.msg = 'passed'
     out['sessionId'] = req.body.account + '_id'
     fakeDB.id2acc[req.body.account + '_id'] = req.body.account
-    logsys.action(req.body.account + ' logged in')
+    logsys.action(req.body.account + ' logged in from')
   }
   // console.log(fakeDB.id2acc)
   res.send(out)

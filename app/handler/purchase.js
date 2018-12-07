@@ -137,3 +137,7 @@ function purchase () {
   // TODO write purchaseRes
   redisClient.quit()
 }
+
+module.exports = function (req, res) {
+
+}

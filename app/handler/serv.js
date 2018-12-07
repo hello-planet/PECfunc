@@ -1,73 +1,78 @@
 /**
  * service operations
+ * status : passed
  */
+// redis client
+const redis = require('redis')
+const bluebird = require('bluebird')
+bluebird.promisifyAll(redis.RedisClient.prototype)
+bluebird.promisifyAll(redis.Multi.prototype)
 const config = require('../config/config')
-const color = require('../utils/color')
+const redisClient = redis.createClient(config.redis)
+
+const logsys = require('../utils/log')
 
 // root page(unused)
 exports.index = function (req, res) {
   res.send('<h3 align="center">hello planet</h3>')
-  console.log(color.log(new Date() + ' root page visited'))
+  logsys.log('root page visited')
 }
 
 // 404 page
 exports.notfound = function (req, res) {
   res.status(404).send('<h3 align="center">Seems you\'ve found something unreal on this planet.</h3>')
-  console.log(color.warn(new Date() + ' 404 warning omitted'))
+  logsys.warn('404 warning omitted')
 }
 
 // init redis data
-exports.init = function (redisClient) {
-  console.log(color.seg('----------redis initialization----------'))
+exports.init = async function () {
+  // test redis service availability
+  redisClient.on('error', function (err) {
+    logsys.error('Error: ' + err)
+  })
+  await redisClient.onAsync('connect').then(function () {
+    logsys.log('Connected to Redis successfully.')
+  })
+  console.log('--------------------redis initialization--------------------')
   // flush all
   // TODO check the existing data and persist them
-  redisClient.flushall()
-
-  // set global variables
-  redisClient.mset(
+  await redisClient.flushallAsync().then(function (reply) {
+    logsys.action('redis flush status: ' + reply)
+  })
+  // set redis global variables
+  await redisClient.msetAsync(
     'global:usrNum', config.global.usrNum,
     'global:txNum', config.global.txNum,
     'global:poolNum', config.global.poolNum,
     'global:blockHeight', config.global.blockHeight,
     'global:nonce', config.global.nonce,
-    'global:powerUnit', config.global.powerUnit,
-    function (err, reply) {
-      if (reply) {
-        console.log(color.action('global strings status: ' + reply))
-      } else {
-        console.log(color.error('global strings error: ' + err))
-      }
-    })
-
-  redisClient.sadd('global:usrList', 'default', function (err, reply) {
-    if (reply) {
-      console.log(color.action('usrList set status: ' + reply))
-    } else {
-      console.log(color.error('usrList set error: ' + err))
-    }
+    'global:powerUnit', config.global.powerUnit).then(function (reply) {
+    logsys.action('redis global strings status: ' + reply)
+  }).catch(function (err) {
+    logsys.error('redis global strings error: ' + err)
   })
-  redisClient.sadd('global:txList', 'default', function (err, reply) {
-    if (reply) {
-      console.log(color.action('txList set status: ' + reply))
-    } else {
-      console.log(color.error('txList set error: ' + err))
-    }
+  await redisClient.saddAsync('global:usrList', 'default').then(function (reply) {
+    logsys.action('redis global usrList set status: ' + reply)
+  }).catch(function (err) {
+    logsys.error('redis global usrList set error: ' + err)
   })
-  redisClient.sadd('global:poolList', 'default', function (err, reply) {
-    if (reply) {
-      console.log(color.action('poolList set status: ' + reply))
-    } else {
-      console.log(color.error('poolList set error: ' + err))
-    }
+  await redisClient.saddAsync('global:txList', 'default').then(function (reply) {
+    logsys.action('redis global txList set status: ' + reply)
+  }).catch(function (err) {
+    logsys.error('redis global txList set error: ' + err)
   })
-  redisClient.sadd('global:finishList', 'default', function (err, reply) {
-    if (reply) {
-      console.log(color.action('finishList set status: ' + reply))
-    } else {
-      console.log(color.error('finishList set error: ' + err))
-    }
+  await redisClient.saddAsync('global:poolList', 'default').then(function (reply) {
+    logsys.action('redis global poolList set status: ' + reply)
+  }).catch(function (err) {
+    logsys.error('redis global poolList set error: ' + err)
   })
-  console.log(color.seg('----------redis initialization----------'))
+  await redisClient.saddAsync('global:finishList', 'default').then(function (reply) {
+    logsys.action('redis global finishList set status: ' + reply)
+  }).catch(function (err) {
+    logsys.error('redis global finishList set error: ' + err)
+  })
+  console.log('--------------------redis initialization--------------------')
+  redisClient.quit()
 }
 
 exports.clean = function () {

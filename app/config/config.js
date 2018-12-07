@@ -1,3 +1,6 @@
+/**
+ * global variables and server setting
+ */
 module.exports = {
   redis: {
     host: '',

@@ -43,3 +43,7 @@ function showPool () {
   // TODO write poolInfo
   redisClient.quit()
 }
+
+module.exports = function (req, res) {
+
+}

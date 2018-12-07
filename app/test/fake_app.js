@@ -10,6 +10,11 @@ const bodyParser = require('body-parser')
 // init server
 const app = express()
 
+app.get('/', function (req, res) {
+  res.send('<h3 align="center">hello planet</h3>')
+  logsys.log('root page visited')
+})
+
 // body-parser
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
@@ -17,13 +22,13 @@ app.use(bodyParser.urlencoded({extended: true}))
 // test
 const test = require('./fake_hand')
 const testApp = express.Router()
-testApp.post('/signup', test.signup)
-testApp.post('/login', test.login)
-testApp.delete('/logout', test.logout)
-testApp.get('/account', test.account)
-testApp.get('/pool', test.pool)
-testApp.put('/purchase', test.purchase)
-testApp.post('/delivery', test.delivery)
+testApp.post('/usr/signup', test.signup)
+testApp.post('/usr/login', test.login)
+testApp.delete('/usr/logout', test.logout)
+testApp.get('/usr/account', test.account)
+testApp.get('/tx/pool', test.pool)
+testApp.put('/tx/purchase', test.purchase)
+testApp.post('/tx/delivery', test.delivery)
 testApp.get('/show', test.show)
 
 app.use('/test', testApp)

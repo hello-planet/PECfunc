@@ -152,3 +152,7 @@ function delivery () {
   // TODO write deliveryRes
   redisClient.quit()
 }
+
+module.exports = function (req, res) {
+
+}

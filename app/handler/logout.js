@@ -14,4 +14,6 @@ redisClient.on('error', function (err) {
   console.log('error: ' + err)
 })
 
-redisClient.quit()
+module.exports = function (req, res) {
+
+}

@@ -1,16 +1,21 @@
-/* global redisClient */
-var redis = require('redis')
-var hash = require('hash.js')
-var crypto = require('crypto')
+/**
+ * login operation
+ * status: failed
+ */
+const crypto = require('crypto')
+// redis client
+const redis = require('redis')
+const bluebird = require('bluebird')
+bluebird.promisifyAll(redis.RedisClient.prototype)
+bluebird.promisifyAll(redis.Multi.prototype)
 const config = require('../config/config')
+const redisClient = redis.createClient(config.redis)
 
-// TODO fetch data from request
-var inputData =
-  {
-    account: 'alice',
-    password: '123456',
-    time: ''
-  }
+const logsys = require('../utils/log')
+
+module.exports = async function (req, res) {
+
+}
 
 redisClient = redis.createClient(config.redis)
 redisClient.on('error', function (err) {
@@ -18,7 +23,7 @@ redisClient.on('error', function (err) {
 })
 
 // TODO new json loginRes
-if (redisClient.exists('usr:' + inputData.account, redisClient.print())) {
+if (redisClient.exists('usr:' + inputData.account, redis.print())) {
   redisClient.on('connect', login)
 } else {
   // TODO write loginRes
@@ -57,4 +62,8 @@ function login () {
     // TODO write loginRes
   }
   redisClient.quit()
+}
+
+module.exports = function (req, res) {
+
 }
