@@ -10,8 +10,7 @@
       "_method": "POST",
       "_path": "/usr/login",
       "account": "",
-      "password": "",
-      "time": ""
+      "password": ""
     },
     "account": {
       "_method": "GET",

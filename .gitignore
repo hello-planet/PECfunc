@@ -26,3 +26,4 @@ _testmain.go
 /.idea/
 /node_modules/
 /log/*.log
+/app/test/test.js

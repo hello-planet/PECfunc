@@ -37,7 +37,7 @@ app.get('/', serv.index)
 // usr middleware funcitons
 usrApp.post('/signup', require('./handler/signup'))
 usrApp.post('/login', require('./handler/login'))
-usrApp.get('/account', function (req, res) {})
+usrApp.get('/account', require('./handler/account'))
 usrApp.delete('/logout', function (req, res) {})
 
 // tx middleware functions

@@ -75,6 +75,6 @@ module.exports = async function (req, res) {
     out.msg = 'succeed'
     logsys.action(req.body.account + ' signed up')
   }
-  redisClient.quit()
+  await redisClient.quitAsync()
   res.send(out)
 }

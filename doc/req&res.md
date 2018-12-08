@@ -17,8 +17,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
             "_method": "POST",
             "_path": "/usr/login",
             "account": "",
-            "password": "",
-            "time": ""
+            "password": ""
         },
         "account": {
             "_method": "GET",

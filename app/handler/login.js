@@ -48,6 +48,6 @@ module.exports = async function (req, res) {
       logsys.action(req.body.account + ' logged in')
     }
   }
-  redisClient.quit()
+  await redisClient.quitAsync()
   res.send(out)
 }
