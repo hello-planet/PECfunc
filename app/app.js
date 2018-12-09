@@ -38,7 +38,7 @@ app.get('/', serv.index)
 usrApp.post('/signup', require('./handler/signup'))
 usrApp.post('/login', require('./handler/login'))
 usrApp.get('/account', require('./handler/account'))
-usrApp.delete('/logout', function (req, res) {})
+usrApp.delete('/logout', require('./handler/logout'))
 
 // tx middleware functions
 txApp.get('/pool', function (req, res) {})
