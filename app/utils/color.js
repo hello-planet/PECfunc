@@ -47,13 +47,17 @@ function bold (string) {
   return styles.bold[0] + string + styles.bold[1]
 }
 
+function cyan (string) {
+  return styles.cyan[0] + string + styles.cyan[1]
+}
+
 // for crud action
 exports.action = green
 
 // for server log
 exports.log = blue
 
-// for invalid data operation
+// for invalid operation
 exports.warn = function (string) {
   return yellow(bold(string))
 }
@@ -61,4 +65,9 @@ exports.warn = function (string) {
 // for crud error
 exports.error = function (string) {
   return red(bold(string))
+}
+
+// for msg segment
+exports.seg = function (string) {
+  return cyan(bold(string))
 }

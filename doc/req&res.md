@@ -77,7 +77,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
             "msg": ""
         },
         "login": {
-            "msg": "passed/declined",
+            "msg": "passed/failed",
             "sessionId": ""
         },
         "account": {

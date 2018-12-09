@@ -68,6 +68,9 @@ module.exports = async function (req, res) {
       logsys.action(account + ' requested for account info.')
     }
   }
+  if (out.msg === 'failed'){
+    logsys.warn('illegal fetching acocunt info from '+req.ip)
+  }
   await redisClient.quitAsync()
   res.send(out)
 }

@@ -33,6 +33,8 @@ app.use('/demo', express.static(path.join(__dirname, '../wwwroot')))
 
 // default page(unused)
 app.get('/', serv.index)
+// show database
+app.get('/serv/show', serv.show)
 
 // usr middleware funcitons
 usrApp.post('/signup', require('./handler/signup'))
@@ -41,21 +43,26 @@ usrApp.get('/account', require('./handler/account'))
 usrApp.delete('/logout', require('./handler/logout'))
 
 // tx middleware functions
-txApp.get('/pool', function (req, res) {})
+txApp.get('/pool', require('./handler/pool'))
 txApp.put('/purchase', function (req, res) {})
-txApp.post('/delivery', function (req, res) {})
+txApp.post('/delivery', require('./handler/delivery'))
 
 // mount the respective routers on app
 app.use('/usr', usrApp)
 app.use('/tx', txApp)
 
 // handle the 404
+// TODO fix route confusion and reuse
 app.use(serv.notfound)
 
 // function server port. appPORT used when 8080 is unavailable
 const port = process.env.appPORT || 8080
-const server = app.listen(port, function () {
-  logsys.log('Server started on ' + port)
+const server = app.listen(port, function (err) {
+  if (err) {
+    logsys.error('server start-up error: ' + err)
+  } else {
+    logsys.log('server started on ' + port)
+  }
 })
 
 // health, readiness and liveness checks

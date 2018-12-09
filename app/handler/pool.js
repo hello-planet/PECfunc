@@ -1,49 +1,61 @@
-/* global redisClient */
-var redis = require('redis')
+/**
+ * pool operation
+ * status: check the retrive of pool tx
+ */
+// redis client
+const redis = require('redis')
+const bluebird = require('bluebird')
+bluebird.promisifyAll(redis.RedisClient.prototype)
+bluebird.promisifyAll(redis.Multi.prototype)
 const config = require('../config/config')
 
-// TODO fetch data from request
-var inputData =
-  {
-    sessionId: '',
-    msg: 'poolInfo'
+const logsys = require('../utils/log')
+
+module.exports = async function (req, res) {
+  var redisClient = redis.createClient(config.redis)
+  var out = {
+    'msg': 'failed'
   }
-
-redisClient = redis.createClient(config.redis)
-redisClient.on('error', function (err) {
-  console.log('error: ' + err)
-})
-
-// TODO new json poolInfo
-if ((input.msg === 'poolInfo') && (redisClient.exists(inputData.sessionId))) {
-  redisClient.on('connect', showPool)
-} else {
-  // TODO write poolInfo
-}
-
-function showPool () {
-  // TODO new json txList
-  redisClient.smembers('global:poolList', function (err, replies) {
-    if (replies) {
-      replies.forEach(function (reply) {
-        redisClient.hgetall('tx:' + reply, function (err, reply) {
-          if (reply) {
-            // TODO write txList
-            console.log('get tx from global:poolList status: ' + reply)
-          } else {
-            console.log('get tx from global:poolList error: ' + err)
-          }
+  if (req.body.msg === 'poolInfo') {
+    var idExisting = 0
+    await redisClient.existsAsync('id:' + req.body.sessionId).then(function (reply) {
+      idExisting = reply
+      // console.log('get usr id exisitence status: ' + reply)
+    }).catch(function (err) {
+      logsys.error('get usr id exisitence error: ' + err)
+    })
+    if (idExisting) {
+      out = {
+        'sessionId': req.body.sessionId,
+        'tx': []
+      }
+      await redisClient.smembersAsync('global:poolList').then(function (replies) {
+        replies.forEach(async function (reply) {
+          await redisClient.hgetallAsync('tx:' + reply).then(function (reply) {
+            if (reply) {
+              out.tx.push(reply)
+            }
+          }).catch(function (err) {
+            logsys.error('get tx from global:poolList error: ' + err)
+          })
         })
+        // console.log('get global:poolList status: OK')
+      }).catch(function (err) {
+        logsys.error('get global:poolList error: ' + err)
       })
-      console.log('get global:poolList status: ' + reply)
-    } else {
-      console.log('get global:poolList error: ' + err)
+      // obtain usr account
+      var account = ''
+      await redisClient.getAsync('id:' + req.body.sessionId).then(function (reply) {
+        account = reply
+      }).catch(function (err) {
+        logsys.error('get usr account name error: ' + err)
+      })
+      logsys.action(account + ' requested for pool info.')
     }
-  })
-  // TODO write poolInfo
-  redisClient.quit()
-}
-
-module.exports = function (req, res) {
-
+  }
+  if (out.msg === 'failed') {
+    logsys.warn('illegal fetching pool info from ' + req.ip)
+  }
+  await redisClient.quitAsync()
+  res.send(out)
 }

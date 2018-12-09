@@ -15,7 +15,7 @@ const logsys = require('../utils/log')
 module.exports = async function (req, res) {
   var redisClient = redis.createClient(config.redis)
   var out = {
-    'msg': 'declined'
+    'msg': 'failed'
   }
   var usrExisting = 0
   await redisClient.existsAsync('usr:' + req.body.account).then(function (reply) {
@@ -47,6 +47,9 @@ module.exports = async function (req, res) {
       out['sessionId'] = sessionId
       logsys.action(req.body.account + ' logged in.')
     }
+  }
+  if (out.msg === 'failed'){
+    logsys.warn('illegal logging in from '+req.ip)
   }
   await redisClient.quitAsync()
   res.send(out)

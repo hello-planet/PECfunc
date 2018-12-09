@@ -74,6 +74,9 @@ module.exports = async function (req, res) {
     out.msg = 'succeed'
     logsys.action(req.body.account + ' signed up.')
   }
+  if (out.msg === 'failed'){
+    logsys.warn('illegal signing up from '+req.ip)
+  }
   await redisClient.quitAsync()
   res.send(out)
 }

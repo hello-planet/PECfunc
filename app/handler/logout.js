@@ -30,7 +30,7 @@ module.exports = async function (req, res) {
       await redisClient.getAsync('id:' + req.body.sessionId).then(function (reply) {
         account = reply
       }).catch(function (err) {
-        logsys.error('Error: ' + err)
+        logsys.error('get usr account name error: ' + err)
       })
       await redisClient.delAsync('id:' + req.body.sessionId).then(function (reply) {
         // console.log('delete usr id status: ' + reply)
@@ -40,6 +40,9 @@ module.exports = async function (req, res) {
       out.msg = 'logout'
       logsys.action(account + ' logged out.')
     }
+  }
+  if (out.msg === 'failed') {
+    logsys.warn('illegal logging out from ' + req.ip)
   }
   await redisClient.quitAsync()
   res.send(out)

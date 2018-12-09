@@ -47,3 +47,8 @@ exports.error = function (string) {
   record(inputStr)
   console.log(color.error(inputStr))
 }
+
+exports.seg = function (string) {
+  record(string)
+  console.log(color.seg(string))
+}
