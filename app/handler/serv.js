@@ -33,7 +33,7 @@ exports.init = async function () {
   await redisClient.onAsync('connect').then(function () {
     logsys.log('connected to redis successfully.')
   })
-  logsys.seg('--------------------redis initialization start--------------------')
+  logsys.seg('--------------------REDIS INITIALIZATION START--------------------')
   // flush all
   // TODO check the existing data and persist them
   await redisClient.flushallAsync().then(function (reply) {
@@ -71,7 +71,7 @@ exports.init = async function () {
   }).catch(function (err) {
     logsys.error('redis global finishList set error: ' + err)
   })
-  logsys.seg('---------------------redis initialization end---------------------')
+  logsys.seg('---------------------REDIS INITIALIZATION END---------------------')
   await redisClient.quitAsync()
 }
 

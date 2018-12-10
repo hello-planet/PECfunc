@@ -1,143 +1,161 @@
-/* global redisClient */
-var redis = require('redis')
+/**
+ * purchase operation
+ * status: passed
+ */
+// redis client
+const redis = require('redis')
+const bluebird = require('bluebird')
+bluebird.promisifyAll(redis.RedisClient.prototype)
+bluebird.promisifyAll(redis.Multi.prototype)
 const config = require('../config/config')
 
-// TODO fetch data from request
-var inputData =
-  {
-    'sessionID': '',
-    'msg': 'purchase',
-    'timestampBuy': '',
-    'tx': [
-      {
-        'txhash': ''
-      }
-    ]
+const logsys = require('../utils/log')
+
+module.exports = async function (req, res) {
+  var redisClient = redis.createClient(config.redis)
+  var out = {
+    'msg': 'failed'
   }
-
-redisClient = redis.createClient(config.redis)
-redisClient.on('error', function (err) {
-  console.log('error: ' + err)
-})
-
-// TODO new json purchaseRes
-if ((inputData.msg === 'purchase') && (redisClient.exists(inputData.sessionId))) {
-  account = redisClient.get(input.sessionId, function (err, reply) {
-    if (reply) {
-      console.log('get session id status: ' + reply)
-    } else {
-      console.log('get session id error: ' + err)
-    }
-  })
-  fromAdd = redisClient.hget('usr:' + account, address, function (err, reply) {
-    if (reply) {
-      console.log('get fromAdd status:' + reply)
-    } else {
-      console.log('get fromAdd error:' + err)
-    }
-  })
-  // write trans
-  redisClient.on('connect', purchase)
-} else {
-  // TODO write purchaseRes
-}
-
-function purchase () {
-  inputData.tx.forEach(function (trans, index) {
-    txHash = 'tx:' + trans
-    txValue = redisClient.hget(txHash, 'value', function (err, reply) {
-      if (reply) {
-        console.log('get tx value status: ' + reply)
-      } else {
-        console.log('get tx value error: ' + err)
-      }
+  if (req.body.msg === 'purchase') {
+    var idExisting = 0
+    await redisClient.existsAsync('id:' + req.body.sessionId).then(function (reply) {
+      idExisting = reply
+      // console.log('get usr id exisitence status: ' + reply)
+    }).catch(function (err) {
+      logsys.error('get usr id exisitence error: ' + err)
     })
-    usrBalance = redisClient.hget('usr:' + account, 'balance', function (err, reply) {
-      if (reply) {
-        console.log('get usr balance status: ' + reply)
-      } else {
-        console.log('get usr balance error: ' + err)
+    if (idExisting) {
+      out = {
+        'sessionId': req.body.sessionId,
+        'result': []
       }
-    })
-    // TODO new json txInfo
-    if (txValue > usrBalance) {
-      // TODO write txInfo msg = 'insufficient balance'
-    } else {
-      // change tx variables
-      redisClient.hmset(txHash, [
-          'status', 'succeed',
-          'timestampBuy', inputData.timestampBuy,
-          'from', fromAdd],
-        function (err, reply) {
-          if (reply) {
-            console.log('change tx variables status: ' + reply)
-          } else {
-            console.log('change tx variables error: ' + err)
-          }
+      var buyerInfo = {
+        account: '',
+        fromAdd: ''
+      }
+      // fetch buyer's info
+      await redisClient.getAsync('id:' + req.body.sessionId).then(function (reply) {
+        // console.log('get usr account name status: OK')
+        buyerInfo.account = reply
+      }).catch(function (err) {
+        logsys.error('get usr account name error: OK')
+      })
+      await redisClient.hgetAsync('usr:' + buyerInfo.account, 'address').then(function (reply) {
+        // console.log('get buyer\'s address status: ' + reply)
+        buyerInfo.fromAdd = reply
+      }).catch(function (err) {
+        logsys.log('get usr account address error: ' + err)
+      })
+      // console.log(buyerInfo)
+      // count for number of successful transactions
+      var txCount = 0
+      // update transactions
+      for (let item of req.body.tx) {
+        var txHash = item.txHash
+        var checkSufficience = {
+          txValue: '',
+          usrBalance: ''
+        }
+        await redisClient.hgetAsync('tx:' + txHash, 'value').then(function (reply) {
+          // console.log('get tx value status: OK')
+          checkSufficience.txValue = reply
+        }).catch(function (err) {
+          logsys.error('get tx value error: ' + err)
         })
-
-      // change associated accounts' variables
-      toAdd = redis.hget(txHash, 'to')
-      sellAccount = redis.get('addr:' + toAdd)
-      redisClient.hincrby('usr:' + sellAccount, 'balance', txValue, function (err, reply) {
-        if (reply) {
-          console.log('get usr balance status: ' + reply)
-        } else {
-          console.log('get usr balance error: ' + err)
+        await redisClient.hgetAsync('usr:' + buyerInfo.account, 'balance').then(function (reply) {
+          // console.log('get usr\'s balance status: OK')
+          checkSufficience.usrBalance = reply
+        }).catch(function (err) {
+          logsys.error('get usr\'s balance error: ' + err)
+        })
+        // console.log(checkSufficience)
+        // TODO check here
+        if (parseInt(checkSufficience.usrBalance) < parseInt(checkSufficience.txValue)) {
+          var oneTx = {
+            txHash: txHash,
+            msg: 'failed'
+          }
+          out.result.push(oneTx)
+          txCount += 1
+          continue
         }
-      })
-      redisClient.hincrby('usr:' + account, 'balance', -txValue, function (err, reply) {
-        if (reply) {
-          console.log('get usr balance status: ' + reply)
-        } else {
-          console.log('get usr balance error: ' + err)
+        // update the transaction
+        await redisClient.hmsetAsync('tx:' + txHash, [
+          'status', 'succeed',
+          'timestampBuy', req.body.timestampBuy,
+          'from', buyerInfo.fromAdd
+        ]).then(function (reply) {
+          // console.log('update the selled tx status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('update the selled tx error: ' + err)
+        })
+        // fetch seller accounts' variables
+        var sellerInfo = {
+          toAdd: '',
+          account: ''
         }
-      })
-      redisClient.hincrby('usr:' + account, 'purchaseNum', 1, function (err, reply) {
-        if (reply) {
-          console.log('get usr balance status: ' + reply)
-        } else {
-          console.log('get usr balance error: ' + err)
+        await redisClient.hgetAsync('tx:' + txHash, 'to').then(function (reply) {
+          // console.log('get seller\'s address status: OK')
+          sellerInfo.toAdd = reply
+        }).catch(function (err) {
+          logsys.error('get seller\'s address error: ' + err)
+        })
+        await redisClient.getAsync('addr:' + sellerInfo.toAdd).then(function (reply) {
+          // console.log('get seller\'s account status: OK')
+          sellerInfo.account = reply
+        }).catch(function (err) {
+          logsys.error('get seller\'s account error: ' + err)
+        })
+        // console.log(sellerInfo)
+        // change associated accounts' variables
+        await redisClient.hincrbyAsync('usr:' + sellerInfo.account, 'balance', checkSufficience.txValue).then(function (reply) {
+          // console.log('increase seller\'s balance status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('increase seller\'s balance status: ' + err)
+        })
+        await redisClient.hincrbyAsync('usr:' + buyerInfo.account, 'balance', -checkSufficience.txValue).then(function (reply) {
+          // console.log('decrease buyer\'s balance status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('decrease buyer\'s balance status: ' + err)
+        })
+        await redisClient.hincrbyAsync('usr:' + buyerInfo.account, 'purchaseNum', 1).then(function (reply) {
+          // console.log('increase buyer\'s purchase number status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('increase buyer\'s purchase number error: ' + err)
+        })
+        await redisClient.saddAsync('usr:' + buyerInfo.account + ':purchase', txHash).then(function (reply) {
+          // console.log('append buyer\'s purchase list status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('append buyer\'s purchase list error: ' + err)
+        })
+        // change global variables
+        await redisClient.decrAsync('global:poolNum').then(function (reply) {
+          // console.log('decrease global pool tx number status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('decrease global pool tx number error: ' + err)
+        })
+        await redisClient.sremAsync('global:poolList', txHash).then(function (reply) {
+          // console.log('remove tx from global pool list status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('remove tx from global pool list error: ' + err)
+        })
+        await redisClient.saddAsync('global:finishList', txHash).then(function (reply) {
+          // console.log('append tx to global finish list status: ' + reply)
+        }).catch(function (err) {
+          logsys.error('append tx to global finish list error: ' + err)
+        })
+        var oneTx = {
+          txHash: txHash,
+          msg: 'succeed'
         }
-      })
-      redisClient.sadd('usr:' + account + ':purchase', trans, function (err, reply) {
-        if (reply) {
-          console.log('get usr balance status: ' + reply)
-        } else {
-          console.log('get usr balance error: ' + err)
-        }
-      })
-
-      // change global variables
-      redisClient.decr('global:poolNum', function (err, reply) {
-        if (reply) {
-          console.log('get usr balance status: ' + reply)
-        } else {
-          console.log('get usr balance error: ' + err)
-        }
-      })
-      redisClient.srem('global:poolList', trans, function (err, reply) {
-        if (reply) {
-          console.log('get usr balance status: ' + reply)
-        } else {
-          console.log('get usr balance error: ' + err)
-        }
-      })
-      redisClient.sadd('global:finishList', trans, function (err, reply) {
-        if (reply) {
-          console.log('get usr balance status: ' + reply)
-        } else {
-          console.log('get usr balance error: ' + err)
-        }
-      })
-      // TODO write txInfo msg = 'succeed'
-      // TODO write purchaseRes
+        out.result.push(oneTx)
+      }
+      logsys.action(buyerInfo.account + ' purchased ' + (req.body.tx.length - txCount) + ' transactions.')
     }
-  })
-  // TODO write purchaseRes
-  redisClient.quit()
-}
-
-module.exports = function (req, res) {
-
+  }
+  if (out.msg === 'failed') {
+    logsys.warn('illegal purchasing transactions from' + req.ip)
+  }
+  await redisClient.quitAsync()
+  res.send(out)
 }

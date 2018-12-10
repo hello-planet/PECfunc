@@ -1,6 +1,6 @@
 /**
  * signup operation
- * status: check the retrive of usr's delivery and purchase lists
+ * status: passed
  */
 // redis client
 const redis = require('redis')
@@ -38,29 +38,29 @@ module.exports = async function (req, res) {
       delete out['password']
       out['delivery'] = []
       out['purchase'] = []
-      await redisClient.smembersAsync('usr:' + account + ':delivery').then(function (replies) {
-        replies.forEach(async function (reply) {
-          await redisClient.hgetallAsync('tx:' + reply).then(function (reply) {
+      await redisClient.smembersAsync('usr:' + account + ':delivery').then(async function (replies) {
+        for (let tx of replies) {
+          await redisClient.hgetallAsync('tx:' + tx).then(function (reply) {
             if (reply) {
               out.delivery.push(reply)
             }
           }).catch(function (err) {
             logsys.error('get tx from usr:account:delivery error: ' + err)
           })
-        })
+        }
       }).catch(function (err) {
         logsys.error('get usr:account:delivery status: ' + err)
       })
-      await redisClient.smembersAsync('usr:' + account + ':purchase').then(function (replies) {
-        replies.forEach(async function (reply) {
-          await redisClient.hgetallAsync('tx:' + reply).then(function (reply) {
+      await redisClient.smembersAsync('usr:' + account + ':purchase').then(async function (replies) {
+        for (let tx of replies){
+          await redisClient.hgetallAsync('tx:' + tx).then(function (reply) {
             if (reply) {
               out.purchase.push(reply)
             }
           }).catch(function (err) {
             logsys.error('get tx from usr:account:purchase error: ' + err)
           })
-        })
+        }
       }).catch(function (err) {
         logsys.error('get usr:account:purchase status: ' + err)
       })
@@ -68,8 +68,8 @@ module.exports = async function (req, res) {
       logsys.action(account + ' requested for account info.')
     }
   }
-  if (out.msg === 'failed'){
-    logsys.warn('illegal fetching acocunt info from '+req.ip)
+  if (out.msg === 'failed') {
+    logsys.warn('illegal fetching acocunt info from ' + req.ip)
   }
   await redisClient.quitAsync()
   res.send(out)

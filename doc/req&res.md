@@ -34,19 +34,19 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
         "purchase": {
             "_method": "PUT",
             "_path": "/tx/purchase",
-            "sessionID": "",
+            "sessionId": "",
             "msg": "purchase",
             "timestampBuy": "",
             "tx": [
                 {
-                    "txhash": ""
+                    "txHash": ""
                 }
             ]
         },
         "delivery": {
             "_method": "POST",
             "_path": "/tx/delivery",
-            "sessionID": "",
+            "sessionId": "",
             "msg": "delivery",
             "timestampSell": "",
             "tx": [
@@ -61,7 +61,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
         "logout": {
             "_method": "DELETE",
             "_path": "/usr/logout",
-            "sessionID": "",
+            "sessionId": "",
             "msg": "logout"
         }
     }
@@ -89,7 +89,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
                 {
                     "txHash": "",
                     "status": "waiting/succeed",
-                    "blockheight": "",
+                    "blockHeight": "",
                     "timestampSell": "",
                     "timestampBuy": "",
                     "value": "",
@@ -105,7 +105,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
                 {
                     "txHash": "",
                     "status": "succeed",
-                    "blockhight": "",
+                    "blockHeight": "",
                     "timestampSell": "",
                     "timestampBuy": "",
                     "value": "",
@@ -126,7 +126,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
                 {
                     "txHash": "",
                     "status": "waiting",
-                    "blockhight": "",
+                    "blockHeight": "",
                     "timestampSell": "",
                     "timestampBuy": "",
                     "value": "",
@@ -154,7 +154,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
                 {
                     "txHash": "",
                     "status": "waiting",
-                    "blockhight": "",
+                    "blockHeight": "",
                     "timestampSell": "",
                     "timestampBuy": "",
                     "value": "",

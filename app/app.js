@@ -44,7 +44,7 @@ usrApp.delete('/logout', require('./handler/logout'))
 
 // tx middleware functions
 txApp.get('/pool', require('./handler/pool'))
-txApp.put('/purchase', function (req, res) {})
+txApp.put('/purchase', require('./handler/purchase'))
 txApp.post('/delivery', require('./handler/delivery'))
 
 // mount the respective routers on app
@@ -61,6 +61,7 @@ const server = app.listen(port, function (err) {
   if (err) {
     logsys.error('server start-up error: ' + err)
   } else {
+    logsys.seg('\n--------------------------SERVER STARTUP--------------------------')
     logsys.log('server started on ' + port)
   }
 })

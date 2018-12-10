@@ -35,7 +35,8 @@ module.exports = async function (req, res) {
       'balance', 100,
       'address', address,
       'deliveryNum', 0,
-      'purchaseNum', 0]).then(function (reply) {
+      'purchaseNum', 0
+    ]).then(function (reply) {
       // console.log('usr main list status: ' + reply)
     }).catch(function (err) {
       logsys.error('usr main list error: ' + err)
