@@ -163,5 +163,5 @@ exports.show = async function (req, res) {
 }
 
 exports.clean = function () {
-  // TODO close server, clean resources used, operate data persistance and close various services
+  // TODO close server, clean resources used and operate data persistance
 }

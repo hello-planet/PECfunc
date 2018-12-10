@@ -28,6 +28,8 @@ const txApp = express.Router()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
+app.set('trust proxy', '127.0.0.1/8')
+
 // serve test pages(static files)
 app.use('/demo', express.static(path.join(__dirname, '../wwwroot')))
 

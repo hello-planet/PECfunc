@@ -69,7 +69,6 @@ module.exports = async function (req, res) {
           logsys.error('get usr\'s balance error: ' + err)
         })
         // console.log(checkSufficience)
-        // TODO check here
         if (parseInt(checkSufficience.usrBalance) < parseInt(checkSufficience.txValue)) {
           var oneTx = {
             txHash: txHash,

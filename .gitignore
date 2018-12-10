@@ -27,3 +27,4 @@ _testmain.go
 /node_modules/
 /log/*.log
 /app/test/test.js
+package-lock.json

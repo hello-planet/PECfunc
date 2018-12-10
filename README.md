@@ -1,8 +1,8 @@
-# PECfunc
+# pec-server
 
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-PowExChain function interfaces for interaction between front-end and DB built from scratch.
+[![JavaScript Style Guide][js-style-image ]][js-style-url]
+[![Build Status][travis-image]][travis-url]
+Centralized back-end server for PowExChain built from scratch.
 
 This project aims to constribute:
 
@@ -13,9 +13,10 @@ This project aims to constribute:
 
 ### How to build
 
+
 ```shell
-$ git clone
-$ cd
+$ git clone https://github.com/hello-planet/pec-server.git
+$ cd pec-server
 $ npm install
 $ npm start
 ```
@@ -32,4 +33,7 @@ $ npm start
 * Performance management
 * Essential optimization
 
-EOF
+[js-style-image ]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
+[js-style-url]: https://standardjs.com
+[travis-image]:
+[travis-url]:
