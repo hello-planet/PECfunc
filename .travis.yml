@@ -1,9 +1,11 @@
 language: node_js
 node_js:
-    - "8"
-git:
-  submodules: false
+  - "8.11"
+sudo: false
+cache:
+  directories:
+    - node_modules
 install:
-    - npm install
+  - npm install
 test:
-    - npm run test
+  - npm run test
