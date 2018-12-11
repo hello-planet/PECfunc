@@ -50,7 +50,7 @@ module.exports = async function (req, res) {
 
     await redisClient.saddAsync('usr:' + req.body.account + ':purchase', 'default').then(function (reply) {
       // console.log('usr purchase list status: ' + reply)
-    }).catch(function () {
+    }).catch(function (err) {
       logsys.error('usr purchase list error: ' + err)
     })
 

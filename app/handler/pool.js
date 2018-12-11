@@ -1,5 +1,5 @@
 /**
- * pool operation
+ * request for pool info
  * status: passed
  */
 // redis client

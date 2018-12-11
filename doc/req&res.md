@@ -63,7 +63,13 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
             "_path": "/usr/logout",
             "sessionId": "",
             "msg": "logout"
-        }
+        },
+        "alive": {
+            "_methond": "GET",
+            "_path": "/usr/alive",
+            "sessionId": "",
+            "msg": "alive"
+    	}
     }
 }
 ```
@@ -170,7 +176,11 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
         },
         "logout": {
             "msg": ""
-        }
+        },
+        "alive": {
+            "sessionId": "",
+            "msg": "alive/dead"
+    	}
     }
 }
 ```

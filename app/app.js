@@ -18,6 +18,7 @@ const serv = require('./handler/serv')
 
 // init redis client
 serv.init()
+serv.defaultUsr()
 
 // init pec-server
 const app = express()
@@ -28,13 +29,22 @@ const txApp = express.Router()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-app.set('trust proxy', '127.0.0.1/8')
+// app.set('trust proxy', '127.0.0.1/8')
+
+app.all('*', function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE')
+  res.header('X-Powered-By', ' 3.2.1')
+  res.header('Content-Type', 'application/json')
+  next()
+})
 
 // serve test pages(static files)
 app.use('/demo', express.static(path.join(__dirname, '../wwwroot')))
-
 // default page(unused)
 app.get('/', serv.index)
+
 // show database
 app.get('/serv/show', serv.show)
 
@@ -43,6 +53,7 @@ usrApp.post('/signup', require('./handler/signup'))
 usrApp.post('/login', require('./handler/login'))
 usrApp.get('/account', require('./handler/account'))
 usrApp.delete('/logout', require('./handler/logout'))
+usrApp.get('/alive',require('./handler/alive'))
 
 // tx middleware functions
 txApp.get('/pool', require('./handler/pool'))

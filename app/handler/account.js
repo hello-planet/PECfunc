@@ -1,5 +1,5 @@
 /**
- * signup operation
+ * request for account info
  * status: passed
  */
 // redis client
