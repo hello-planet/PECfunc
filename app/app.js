@@ -51,12 +51,12 @@ app.get('/serv/show', serv.show)
 // usr middleware funcitons
 usrApp.post('/signup', require('./handler/signup'))
 usrApp.post('/login', require('./handler/login'))
-usrApp.get('/account', require('./handler/account'))
+usrApp.get('/account/:sessionId', require('./handler/account'))
 usrApp.delete('/logout', require('./handler/logout'))
-usrApp.get('/alive',require('./handler/alive'))
+usrApp.get('/alive/:sessionId',require('./handler/alive'))
 
 // tx middleware functions
-txApp.get('/pool', require('./handler/pool'))
+txApp.get('/pool/:sessionId', require('./handler/pool'))
 txApp.put('/purchase', require('./handler/purchase'))
 txApp.post('/delivery', require('./handler/delivery'))
 

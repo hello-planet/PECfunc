@@ -1,6 +1,6 @@
 # Request & Response
 
-All CRUD operations conducted via RESTful(alike) HTTP requests.
+All CRUD operations conducted via RESTful HTTP requests.
 
 ### request
 
@@ -21,15 +21,11 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
         },
         "account": {
             "_method": "GET",
-            "_path": "/usr/account",
-            "sessionId": "",
-            "msg": "accountInfo"
+            "_path": "/usr/account/:sessionId"
         },
         "pool": {
             "_method": "GET",
-            "_path": "/tx/pool",
-            "sessionId": "",
-            "msg": "poolInfo"
+            "_path": "/tx/pool/:sessionId"
         },
         "purchase": {
             "_method": "PUT",
@@ -66,9 +62,7 @@ All CRUD operations conducted via RESTful(alike) HTTP requests.
         },
         "alive": {
             "_methond": "GET",
-            "_path": "/usr/alive",
-            "sessionId": "",
-            "msg": "alive"
+            "_path": "/usr/alive/:sessionId"
     	}
     }
 }
