@@ -24,12 +24,18 @@ serv.defaultUsr()
 const app = express()
 const usrApp = express.Router()
 const txApp = express.Router()
+const servApp = express.Router()
 
 // body-parser
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
+// app.set('trust proxy', true)
 // app.set('trust proxy', '127.0.0.1/8')
+app.set('trust proxy', function (ip) {
+  if (ip === '127.0.0.1') return true
+  else return false
+})
 
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -45,24 +51,26 @@ app.use('/demo', express.static(path.join(__dirname, '../wwwroot')))
 // default page(unused)
 app.get('/', serv.index)
 
-// show database
-app.get('/serv/show', serv.show)
-
 // usr middleware funcitons
 usrApp.post('/signup', require('./handler/signup'))
 usrApp.post('/login', require('./handler/login'))
-usrApp.get('/account/:sessionId', require('./handler/account'))
+usrApp.get('/account/:msg/:sessionId', require('./handler/account'))
 usrApp.delete('/logout', require('./handler/logout'))
-usrApp.get('/alive/:sessionId',require('./handler/alive'))
+usrApp.get('/alive/:msg/:sessionId', require('./handler/alive'))
 
 // tx middleware functions
-txApp.get('/pool/:sessionId', require('./handler/pool'))
+txApp.get('/pool/:msg/:sessionId', require('./handler/pool'))
 txApp.put('/purchase', require('./handler/purchase'))
 txApp.post('/delivery', require('./handler/delivery'))
+
+// serv functions
+servApp.get('/show', serv.show)
+servApp.get('/test', serv.test)
 
 // mount the respective routers on app
 app.use('/usr', usrApp)
 app.use('/tx', txApp)
+app.use('/serv', servApp)
 
 // handle the 404
 // TODO fix route confusion and reuse

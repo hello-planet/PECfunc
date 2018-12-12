@@ -21,11 +21,11 @@ All CRUD operations conducted via RESTful HTTP requests.
         },
         "account": {
             "_method": "GET",
-            "_path": "/usr/account/:sessionId"
+            "_path": "/usr/account/:msg/:sessionId"
         },
         "pool": {
             "_method": "GET",
-            "_path": "/tx/pool/:sessionId"
+            "_path": "/tx/pool/:msg/:sessionId"
         },
         "purchase": {
             "_method": "PUT",
@@ -62,7 +62,7 @@ All CRUD operations conducted via RESTful HTTP requests.
         },
         "alive": {
             "_methond": "GET",
-            "_path": "/usr/alive/:sessionId"
+            "_path": "/usr/alive/:msg/:sessionId"
     	}
     }
 }

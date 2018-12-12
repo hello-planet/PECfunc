@@ -14,7 +14,7 @@ const logsys = require('../utils/log')
 
 // root page(unused)
 exports.index = function (req, res) {
-  res.send('<h3 align="center">hello planet</h3>')
+  res.send('<h3 align="center">api server</h3>')
   logsys.log('root page visited')
 }
 
@@ -174,8 +174,8 @@ exports.defaultUsr = async function () {
     account: 'bob',
     password: '123456'
   }
-  await signup(redisClient,alice)
-  await signup(redisClient,bob)
+  await signup(redisClient, alice)
+  await signup(redisClient, bob)
   await redisClient.quitAsync()
 }
 
@@ -183,7 +183,12 @@ exports.clean = function () {
   // TODO close server, clean resources used and operate data persistance
 }
 
-async function signup(redisClient, usr) {
+// for test
+exports.test = function (req, res) {
+  res.send(req.hostname)
+}
+
+async function signup (redisClient, usr) {
   var address = crypto.createHash('sha256').update(usr.account + usr.password).digest('hex')
   var password = crypto.createHash('sha256').update(usr.password).digest('hex')
   // write usr
