@@ -7,12 +7,12 @@ Centralized back-end server for PowExChain built from scratch.
 This project aims to constribute:
 
 * centralized pec-server back-end demo
-* express build demo
+* [express](http://www.expressjs.com/) build demo
 * basic CRUD operation logic
 * production enviroment build demo
 
 ### Install and Startup
-Make sure that you've had Redis server and Node.js installed before running.
+Make sure that you've had [Redis](https://redis.io/) server and Node.js installed before running.
 ```shell
 $ git clone https://github.com/hello-planet/pec-server.git
 $ cd pec-server

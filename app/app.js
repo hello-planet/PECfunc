@@ -30,15 +30,16 @@ const servApp = express.Router()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-// app.set('trust proxy', true)
-// app.set('trust proxy', '127.0.0.1/8')
-app.set('trust proxy', function (ip) {
-  if (ip === '127.0.0.1') return true
-  else return false
-})
+app.set('trust proxy', true)
+app.set('trust proxy', 'loopback')
+// app.set('trust proxy', function (ip) {
+//   if (ip === '127.0.0.1') return true
+//   else return false
+// })
 
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
+  // TODO cache control
   res.header('Access-Control-Allow-Headers', 'Content-Type')
   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE')
   res.header('X-Powered-By', ' 3.2.1')
@@ -65,7 +66,7 @@ txApp.post('/delivery', require('./handler/delivery'))
 
 // serv functions
 servApp.get('/show', serv.show)
-servApp.get('/test', serv.test)
+// servApp.get('/test', serv.test)
 
 // mount the respective routers on app
 app.use('/usr', usrApp)

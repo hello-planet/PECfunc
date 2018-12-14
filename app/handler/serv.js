@@ -183,10 +183,10 @@ exports.clean = function () {
   // TODO close server, clean resources used and operate data persistance
 }
 
-// for test
-exports.test = function (req, res) {
-  res.send(req.hostname)
-}
+// // for test
+// exports.test = function (req, res) {
+//   res.send(req.hostname + ' from ' + req.ip)
+// }
 
 async function signup (redisClient, usr) {
   var address = crypto.createHash('sha256').update(usr.account + usr.password).digest('hex')
