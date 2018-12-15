@@ -74,10 +74,10 @@ All CRUD operations conducted via RESTful HTTP requests.
 {
     "response": {
         "signup": {
-            "msg": ""
+            "msg": "failed/succeed"
         },
         "login": {
-            "msg": "passed/failed",
+            "msg": "failed/passed",
             "sessionId": ""
         },
         "account": {
@@ -169,7 +169,7 @@ All CRUD operations conducted via RESTful HTTP requests.
             ]
         },
         "logout": {
-            "msg": ""
+            "msg": "failed/logout"
         },
         "alive": {
             "sessionId": "",
