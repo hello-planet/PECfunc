@@ -27,6 +27,11 @@ The terminal will track the server actions. Feel free to check the log files in 
 * [Request & Response](doc/req\&res.md)
 * [Functions](doc/func.md)
 
+### Issues & Updates
+
+* [Issues](doc/issue\&update.md#issues)
+* [Updates](doc/issue\&update.md#updates)
+
 #### TODO
 
 * Security/Authentication

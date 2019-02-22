@@ -35,11 +35,7 @@ exports.init = async function () {
     logsys.log('connected to redis successfully.')
   })
   logsys.seg('--------------------REDIS INITIALIZATION START--------------------')
-  // flush all
-  // TODO check the existing data and persist them
-  await redisClient.flushallAsync().then(function (reply) {
-    logsys.action('redis flush status: ' + reply)
-  })
+
   // set redis global variables
   await redisClient.msetAsync(
     'global:usrNum', config.global.usrNum,
@@ -181,6 +177,14 @@ exports.defaultUsr = async function () {
 
 exports.clean = function () {
   // TODO close server, clean resources used and operate data persistance
+}
+
+exports.flushDb = async function () {
+  // flush all
+  // TODO check the existing data and persist them
+  await redisClient.flushallAsync().then(function (reply) {
+    logsys.action('redis flush status: ' + reply)
+  })
 }
 
 // // for test

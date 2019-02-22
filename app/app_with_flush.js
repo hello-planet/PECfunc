@@ -17,6 +17,7 @@ const serv = require('./handler/serv')
 
 // init redis client
 serv.init()
+serv.flushDb()
 serv.defaultUsr()
 
 // init pec-server
