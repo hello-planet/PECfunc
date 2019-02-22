@@ -15,10 +15,12 @@ const logsys = require('./utils/log')
 // handlers
 const serv = require('./handler/serv')
 
-// init redis client
-serv.init()
+// init redis client with flush
+logsys.seg('--------------------REDIS INITIALIZATION START--------------------')
 serv.flushDb()
+serv.globalData()
 serv.defaultUsr()
+logsys.seg('---------------------REDIS INITIALIZATION END---------------------')
 
 // init pec-server
 const app = express()

@@ -15,10 +15,6 @@ const logsys = require('./utils/log')
 // handlers
 const serv = require('./handler/serv')
 
-// init redis client
-serv.init()
-serv.defaultUsr()
-
 // init pec-server
 const app = express()
 const usrApp = express.Router()

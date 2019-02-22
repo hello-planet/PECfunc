@@ -7,7 +7,8 @@ const redis = require('redis')
 const bluebird = require('bluebird')
 bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
-const config = require('../config/config')
+const global = require('../config/config').global
+const redisConfig = require('../config/config').redis
 
 const crypto = require('crypto')
 const logsys = require('../utils/log')
@@ -25,8 +26,8 @@ exports.notfound = function (req, res) {
 }
 
 // init redis data
-exports.init = async function () {
-  var redisClient = redis.createClient(config.redis)
+exports.globalData = async function () {
+  var redisClient = redis.createClient(redisConfig)
   // test redis service availability
   redisClient.on('error', function (err) {
     logsys.error('Error: ' + err)
@@ -34,16 +35,14 @@ exports.init = async function () {
   await redisClient.onAsync('connect').then(function () {
     logsys.log('connected to redis successfully.')
   })
-  logsys.seg('--------------------REDIS INITIALIZATION START--------------------')
-
   // set redis global variables
   await redisClient.msetAsync(
-    'global:usrNum', config.global.usrNum,
-    'global:txNum', config.global.txNum,
-    'global:poolNum', config.global.poolNum,
-    'global:blockHeight', config.global.blockHeight,
-    'global:nonce', config.global.nonce,
-    'global:powerUnit', config.global.powerUnit).then(function (reply) {
+    'global:usrNum', global.usrNum,
+    'global:txNum', global.txNum,
+    'global:poolNum', global.poolNum,
+    'global:blockHeight', global.blockHeight,
+    'global:nonce', global.nonce,
+    'global:powerUnit', global.powerUnit).then(function (reply) {
     logsys.action('redis global strings status: ' + reply)
   }).catch(function (err) {
     logsys.error('redis global strings error: ' + err)
@@ -68,13 +67,12 @@ exports.init = async function () {
   }).catch(function (err) {
     logsys.error('redis global finishList set error: ' + err)
   })
-  logsys.seg('---------------------REDIS INITIALIZATION END---------------------')
   await redisClient.quitAsync()
 }
 
 // show global variables
 exports.show = async function (req, res) {
-  var redisClient = redis.createClient(config.redis)
+  var redisClient = redis.createClient(redisConfig)
   var out = {
     'msg': 'failed'
   }
@@ -161,7 +159,7 @@ exports.show = async function (req, res) {
 
 // add alice and bob
 exports.defaultUsr = async function () {
-  var redisClient = redis.createClient(config.redis)
+  var redisClient = redis.createClient(redisConfig)
   var alice = {
     account: 'alice',
     password: '123456'
