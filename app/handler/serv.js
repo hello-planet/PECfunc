@@ -25,8 +25,8 @@ exports.notfound = function (req, res) {
   logsys.warn('404 warning omitted')
 }
 
-// init redis data
-exports.globalData = async function () {
+// test database connection
+exports.testCon = async function () {
   var redisClient = redis.createClient(redisConfig)
   // test redis service availability
   redisClient.on('error', function (err) {
@@ -35,6 +35,26 @@ exports.globalData = async function () {
   await redisClient.onAsync('connect').then(function () {
     logsys.log('connected to redis successfully.')
   })
+  await redisClient.quitAsync()
+}
+
+exports.init = async function () {
+  var redisClient = redis.createClient(redisConfig)
+  // test redis service availability
+  redisClient.on('error', function (err) {
+    logsys.error('Error: ' + err)
+  })
+  await redisClient.onAsync('connect').then(function () {
+    logsys.log('connected to redis successfully.')
+  })
+
+  logsys.seg('--------------------REDIS INITIALIZATION START--------------------')
+  // flush all
+  // TODO check the existing data and persist them
+  await redisClient.flushallAsync().then(function (reply) {
+    logsys.action('redis flush status: ' + reply)
+  })
+
   // set redis global variables
   await redisClient.msetAsync(
     'global:usrNum', global.usrNum,
@@ -67,6 +87,19 @@ exports.globalData = async function () {
   }).catch(function (err) {
     logsys.error('redis global finishList set error: ' + err)
   })
+
+  // add default users
+  var alice = {
+    account: 'alice',
+    password: '123456'
+  }
+  var bob = {
+    account: 'bob',
+    password: '123456'
+  }
+  await signup(redisClient, alice)
+  await signup(redisClient, bob)
+  logsys.seg('---------------------REDIS INITIALIZATION END---------------------')
   await redisClient.quitAsync()
 }
 
@@ -157,38 +190,14 @@ exports.show = async function (req, res) {
   res.send(out)
 }
 
-// add alice and bob
-exports.defaultUsr = async function () {
-  var redisClient = redis.createClient(redisConfig)
-  var alice = {
-    account: 'alice',
-    password: '123456'
-  }
-  var bob = {
-    account: 'bob',
-    password: '123456'
-  }
-  await signup(redisClient, alice)
-  await signup(redisClient, bob)
-  await redisClient.quitAsync()
-}
-
 exports.clean = function () {
   // TODO close server, clean resources used and operate data persistance
 }
 
-exports.flushDb = async function () {
-  // flush all
-  // TODO check the existing data and persist them
-  await redisClient.flushallAsync().then(function (reply) {
-    logsys.action('redis flush status: ' + reply)
-  })
+// for test
+exports.test = function (req, res) {
+  res.send(req.hostname + ' from ' + req.ip)
 }
-
-// // for test
-// exports.test = function (req, res) {
-//   res.send(req.hostname + ' from ' + req.ip)
-// }
 
 async function signup (redisClient, usr) {
   var address = crypto.createHash('sha256').update(usr.account + usr.password).digest('hex')

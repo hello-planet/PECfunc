@@ -15,6 +15,9 @@ const logsys = require('./utils/log')
 // handlers
 const serv = require('./handler/serv')
 
+// test redis connection
+serv.testCon()
+
 // init pec-server
 const app = express()
 const usrApp = express.Router()
@@ -27,10 +30,6 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.set('trust proxy', true)
 app.set('trust proxy', 'loopback')
-// app.set('trust proxy', function (ip) {
-//   if (ip === '127.0.0.1') return true
-//   else return false
-// })
 
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')

@@ -15,12 +15,8 @@ const logsys = require('./utils/log')
 // handlers
 const serv = require('./handler/serv')
 
-// init redis client with flush
-logsys.seg('--------------------REDIS INITIALIZATION START--------------------')
-serv.flushDb()
-serv.globalData()
-serv.defaultUsr()
-logsys.seg('---------------------REDIS INITIALIZATION END---------------------')
+// test and init redis with flush
+serv.init()
 
 // init pec-server
 const app = express()
@@ -34,10 +30,6 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.set('trust proxy', true)
 app.set('trust proxy', 'loopback')
-// app.set('trust proxy', function (ip) {
-//   if (ip === '127.0.0.1') return true
-//   else return false
-// })
 
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
