@@ -79,7 +79,7 @@ module.exports = async function (req, res) {
           'blockHeight', globalVar.blockHeight,
           'timestampSell', req.body.timestampSell,
           'timestampBuy', '',
-          'value', tx.value,
+          'value', 0,
           'amount', tx.amount,
           'type', tx.type,
           'from', '',
@@ -91,11 +91,17 @@ module.exports = async function (req, res) {
         }).catch(function (err) {
           logsys.error('set trans hash error: ' + err)
         })
-        if (tx.value === 0) {
+        if (tx.value === 0 || tx.value === null) {
           await redisClient.hsetAsync('tx:' + txHash, 'value', tx.amount * globalVar.powerUnit).then(function (reply) {
-            // console.log('change tx value based on amount status(0 means passed): ' + reply)
+            // console.log('set tx value based on amount status(0 means passed): ' + reply)
           }).catch(function (err) {
-            logsys.error('change tx value based on amount error: ' + err)
+            logsys.error('set tx value based on amount error: ' + err)
+          })
+        } else {
+          await redisClient.hsetAsync('tx:' + txHash, 'value', tx.value).then(function (reply) {
+            // console.log('set tx value based on value status(0 means passed): ' + reply)
+          }).catch(function (err) {
+            logsys.error('set tx value based on value error: ' + err)
           })
         }
         // change associated account's variables
