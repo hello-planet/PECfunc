@@ -18,6 +18,9 @@ const serv = require('./handler/serv')
 // test redis connection
 serv.testCon()
 
+// // test and init redis with flush
+// serv.init()
+
 // init pec-server
 const app = express()
 const usrApp = express.Router()
@@ -49,18 +52,18 @@ app.get('/', serv.index)
 // usr middleware funcitons
 usrApp.post('/signup', require('./handler/signup'))
 usrApp.post('/login', require('./handler/login'))
-usrApp.get('/account/:msg/:sessionId', require('./handler/account'))
+usrApp.get('/account/:sessionId', require('./handler/account'))
 usrApp.delete('/logout', require('./handler/logout'))
-usrApp.get('/alive/:msg/:sessionId', require('./handler/alive'))
+usrApp.get('/alive/:sessionId', require('./handler/alive'))
 
 // tx middleware functions
-txApp.get('/pool/:msg/:sessionId', require('./handler/pool'))
+txApp.get('/pool/:sessionId', require('./handler/pool'))
 txApp.put('/purchase', require('./handler/purchase'))
 txApp.post('/delivery', require('./handler/delivery'))
 
 // serv functions
 servApp.get('/show', serv.show)
-// servApp.get('/test', serv.test)
+servApp.get('/test', serv.test)
 
 // mount the respective routers on app
 app.use('/usr', usrApp)

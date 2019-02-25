@@ -1,6 +1,6 @@
 /**
  * check the aliveness
- * status: failed
+ * status: passed
  */
 // redis client
 const redis = require('redis')
@@ -17,15 +17,13 @@ module.exports = async function (req, res) {
     sessionId: req.params.sessionId,
     msg: 'dead'
   }
-  if (req.params.msg === 'alive') {
-    await redisClient.existsAsync('id:' + req.params.sessionId).then(function (reply) {
-      if (reply) {
-        out.msg = 'alive'
-      }
-    }).catch(function (err) {
-      logsys.error('get usr id exisitence error: ' + err)
-    })
-  }
+  await redisClient.existsAsync('id:' + req.params.sessionId).then(function (reply) {
+    if (reply) {
+      out.msg = 'alive'
+    }
+  }).catch(function (err) {
+    logsys.error('get usr id exisitence error: ' + err)
+  })
   await redisClient.quitAsync()
   res.send(out)
 }
