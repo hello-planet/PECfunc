@@ -178,7 +178,19 @@ All CRUD operations conducted via RESTful HTTP requests.
         "alive": {
             "sessionId": "",
             "msg": "alive/dead"
-    	}
+    	},
+        "show": {
+            "usrNum": "",
+            "poolNum": "",
+            "txNum": "",
+            "usrList": [],
+            "poolList": [],
+            "finishList": [],
+            "txList": [],
+            "blockHeight": "",
+            "nonce": "",
+            "powerUnit": ""
+        }
     }
 }
 ```

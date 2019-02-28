@@ -1,5 +1,7 @@
 /**
  * pec-server
+ *
+ * boot with database flush
  */
 // express engine
 const express = require('express')
@@ -16,10 +18,10 @@ const logsys = require('./utils/log')
 const serv = require('./handler/serv')
 
 // test redis connection
-serv.testCon()
+// serv.testCon()
 
-// // test and init redis with flush
-// serv.init()
+// test and init redis with flush
+serv.init()
 
 // init pec-server
 const app = express()
