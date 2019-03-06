@@ -17,9 +17,6 @@ const logsys = require('./utils/log')
 // handlers
 const serv = require('./handler/serv')
 
-// test redis connection
-// serv.testCon()
-
 // test and init redis with flush
 serv.init()
 
@@ -62,6 +59,7 @@ usrApp.get('/alive/:sessionId', require('./handler/alive'))
 txApp.get('/pool/:sessionId', require('./handler/pool'))
 txApp.put('/purchase', require('./handler/purchase'))
 txApp.post('/delivery', require('./handler/delivery'))
+txApp.get('/available/:txId', require('./handler/available'))
 
 // serv functions
 servApp.get('/show', serv.show)
