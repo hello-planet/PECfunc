@@ -9,14 +9,7 @@ const {
 
 // etc lib
 const bodyParser = require('body-parser')
-const path = require('path')
-const logsys = require('./utils/log')
-
-// handlers
-const serv = require('./handler/serv')
-
-// test redis connection
-serv.testCon()
+const pathParser = require('path')
 
 // init pec-server
 const app = express()
@@ -24,13 +17,31 @@ const usrApp = express.Router()
 const txApp = express.Router()
 const servApp = express.Router()
 
-// body-parser
+// global variables
+const redis = require('redis')
+const bluebird = require('bluebird')
+bluebird.promisifyAll(redis.RedisClient.prototype)
+bluebird.promisifyAll(redis.Multi.prototype)
+global.redisServer = redis
+var serverConfig = require('./config/config')
+global.globalVar = serverConfig.globalVar
+global.statusCode = serverConfig.status
+global.redisCfg = serverConfig.redis
+global.logger = require('./utils/log')
+
+// server level handlers
+const serv = require('./handler/serv')
+
+// test redis connection
+serv.testCon()
+// // test and init redis with flush
+// serv.init()
+
+// server level settings
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
-
 app.set('trust proxy', true)
 app.set('trust proxy', 'loopback')
-
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   // TODO cache control
@@ -42,7 +53,7 @@ app.all('*', function (req, res, next) {
 })
 
 // serve test pages(static files)
-app.use('/demo', express.static(path.join(__dirname, '../wwwroot')))
+app.use('/demo', express.static(pathParser.join(__dirname, '../wwwroot')))
 // default page(unused)
 app.get('/', serv.index)
 
@@ -59,7 +70,7 @@ txApp.put('/purchase', require('./handler/purchase'))
 txApp.post('/delivery', require('./handler/delivery'))
 txApp.get('/available/:txId', require('./handler/available'))
 
-// serv functions
+// serv middleware functions
 servApp.get('/show', serv.show)
 servApp.get('/test', require('./test/test'))
 
@@ -76,10 +87,10 @@ app.use(serv.notfound)
 const port = process.env.appPORT || 8080
 const server = app.listen(port, function (err) {
   if (err) {
-    logsys.error('server start-up error: ' + err)
+    log.error('server start-up error: ' + err)
   } else {
-    logsys.seg('\n--------------------------SERVER STARTUP--------------------------')
-    logsys.log('server started on ' + port)
+    logger.seg('\n--------------------------SERVER STARTUP--------------------------')
+    logger.log('server started on ' + port)
   }
 })
 

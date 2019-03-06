@@ -2,27 +2,23 @@
  * signup operation
  * status: passed
  */
-// redis client
-const redis = require('redis')
-const bluebird = require('bluebird')
-bluebird.promisifyAll(redis.RedisClient.prototype)
-bluebird.promisifyAll(redis.Multi.prototype)
-const config = require('../config/config')
 
+// const pwDemand = require('../config/config').password
 const crypto = require('crypto')
-const logsys = require('../utils/log')
 
 module.exports = async function (req, res) {
-  var redisClient = redis.createClient(config.redis)
+  var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    "status": '',
+    'msg': ''
   }
   var usrExisting = 1
   await redisClient.existsAsync('usr:' + req.body.account).then(function (reply) {
     // console.log('usr exists status: ' + reply)
     usrExisting = reply
+    out.msg = 'failed'
   }).catch(function (err) {
-    logsys.error('usr exists error: ' + err)
+    logger.error('usr exists error: ' + err)
   })
   if (!usrExisting) {
     var address = crypto.createHash('sha256').update(req.body.account + req.body.password).digest('hex')
@@ -39,44 +35,45 @@ module.exports = async function (req, res) {
     ]).then(function (reply) {
       // console.log('usr main list status: ' + reply)
     }).catch(function (err) {
-      logsys.error('usr main list error: ' + err)
+      logger.error('usr main list error: ' + err)
     })
 
+    // wirte user tx information
     await redisClient.saddAsync('usr:' + req.body.account + ':delivery', 'default').then(function (reply) {
       // console.log('usr delivery list status: ' + reply)
     }).catch(function (err) {
-      logsys.error('usr delivery list error: ' + err)
+      logger.error('usr delivery list error: ' + err)
     })
 
     await redisClient.saddAsync('usr:' + req.body.account + ':purchase', 'default').then(function (reply) {
       // console.log('usr purchase list status: ' + reply)
     }).catch(function (err) {
-      logsys.error('usr purchase list error: ' + err)
+      logger.error('usr purchase list error: ' + err)
     })
 
     // set index from address to account
     await redisClient.setAsync('addr:' + address, req.body.account).then(function (reply) {
       // console.log('address-account k-v status: ' + reply)
     }).catch(function (err) {
-      logsys.error('address-account k-v error: ' + err)
+      logger.error('address-account k-v error: ' + err)
     })
 
-    // change global
+    // change global variables
     await redisClient.incrAsync('global:usrNum').then(function (reply) {
       // console.log('usr number increment status: ' + reply)
     }).catch(function (err) {
-      logsys.error('usr number increment error: ' + err)
+      logger.error('usr number increment error: ' + err)
     })
     await redisClient.saddAsync('global:usrList', req.body.account).then(function (reply) {
       // console.log('usr added to global list status: ' + reply)
     }).catch(function (err) {
-      logsys.error('usr added to global list error: ' + err)
+      logger.error('usr added to global list error: ' + err)
     })
     out.msg = 'succeed'
-    logsys.action(req.body.account + ' signed up.')
+    logger.action(req.body.account + ' signed up.')
   }
   if (out.msg === 'failed'){
-    logsys.warn('illegal signing up from '+req.ip)
+    logger.warn('illegal signing up from '+req.ip)
   }
   await redisClient.quitAsync()
   res.send(out)

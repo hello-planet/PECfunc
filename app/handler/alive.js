@@ -1,18 +1,10 @@
 /**
  * check the aliveness
- * status: passed
+ * status: bug remains fixed
  */
-// redis client
-const redis = require('redis')
-const bluebird = require('bluebird')
-bluebird.promisifyAll(redis.RedisClient.prototype)
-bluebird.promisifyAll(redis.Multi.prototype)
-const config = require('../config/config')
-
-const logsys = require('../utils/log')
 
 module.exports = async function (req, res) {
-  var redisClient = redis.createClient(config.redis)
+  var redisClient = redisServer.createClient(redisCfg)
   var out = {
     sessionId: req.params.sessionId,
     msg: 'dead'
@@ -22,7 +14,7 @@ module.exports = async function (req, res) {
       out.msg = 'alive'
     }
   }).catch(function (err) {
-    logsys.error('get usr id exisitence error: ' + err)
+    logger.error('get usr id exisitence error: ' + err)
   })
   await redisClient.quitAsync()
   res.send(out)
