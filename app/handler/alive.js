@@ -6,12 +6,17 @@
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    sessionId: req.params.sessionId,
-    msg: 'dead'
+    status: '',
+    msg: '',
+    sessionId: req.params.sessionId
   }
-  await redisClient.existsAsync('id:' + req.params.sessionId).then(function (reply) {
+  await redisClient.existsAsync('id:' + out.sessionId).then(function (reply) {
     if (reply) {
-      out.msg = 'alive'
+      out.status = 725
+      out.msg = statusCode.success['725']
+    } else {
+      out.status = 826
+      out.msg = statusCode.illegal['826']
     }
   }).catch(function (err) {
     logger.error('get usr id exisitence error: ' + err)

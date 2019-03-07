@@ -2,6 +2,8 @@
 
 ###  Global
 
+*usrNum*, *poolNum*, *txNum*, *blockHeight*, *nonce* and *powerUnit* come to be **String** type. *usrList*, *poolList*, *finishList*, *txList* are store in **Set** type.
+
 ```json
 {
     "global": {
@@ -14,13 +16,14 @@
         "txList": [],
         "blockHeight": "",
         "nonce": "",
-        "powerUnit": "",
-        "_comment": "In redis server, usrNum, poolNum, txNum, blockHeight, nonce and powerUnit come to be 'String' type, while usrList, poolList, finishList, txList are store in 'Set' type."
+        "powerUnit": ""
     }
 }
 ```
 
 ### Account
+
+Partial usrinfo associated with one account will be stored in **Hash** type, except for *deliveryList* and *purchaseList*, which shown in **Set** type. Corresponding keys about an account are `usr:$account`, `usr:$account:deliveryList` and `usr:$account:purchaseList` respectively.
 
 ```json
 {
@@ -32,13 +35,14 @@
     	"deliveryNum": "",
     	"purchaseNum": "",
     	"deliveryList": [],
-        "purchaseList": [],
-        "_comment": "In redis server, partial usrinfo associated with one account will be stored in 'Hash' type, except for deliveryList and purchaseList, which shown in 'Set' type. Corresponding keys about an account are 'usr:$account', 'usr:$account:deliveryList' and 'usr:$account:purchaseList' respectively."
+        "purchaseList": []
     }
 }
 ```
 
 ### Transaction
+
+All txinfo associated with one transaction will be stored in **Hash** type. The key of tx is `tx:$txHash`.
 
 ```json
 {
@@ -48,27 +52,28 @@
         "blockHeight": "",
         "timestampSell": "",
         "timestampBuy": "",
+        "timestampExpire": "",
         "value": "",
         "amount": "",
         "type": "",
         "from": "",
         "to": "",
         "nonce": "",
-        "inputData": "",
-        "_comment": "In redis server, all txinfo associated with one transaction will be stored in 'Hash' type. The key of tx is 'tx:$txHash'."
+        "inputData": ""
     }
 }
 ```
 
 ### K-V address-account
 
+All address-account pairs will be stored in **String** type. The key is `addr:$address`.
+
 ```json
 {
     "address-account": [
         {
             "address": "",
-            "account": "",
-            "_comment": "In redis server, all address-account pairs will be stored in 'String' type. The key is 'addr:$address'."
+            "account": ""
         }
     ]
 }
@@ -76,18 +81,17 @@
 
 ### K-V sessionId-account
 
+All sessionId-account pairs will be stored in **String** type. The key is `id:$sessionId`.
+
 ```json
 {
     "sessionId-account": [
         {
             "sessionId": "",
-            "account": "",
-            "_comment": "In redis server, all sessionId-account pairs will be stored in 'String' type. The key is 'id:$sessionId'."
+            "account": ""
         }
     ]
 }
 ```
-
- 
 
 EOF

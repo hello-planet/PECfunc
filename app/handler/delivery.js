@@ -7,20 +7,21 @@ const crypto = require('crypto')
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    status: '',
+    msg: '',
+    sessionId: req.body.sessionId
   }
-  var idExisting = 0
-  await redisClient.existsAsync('id:' + req.body.sessionId).then(function (reply) {
+  let idExisting
+  await redisClient.existsAsync('id:' + out.sessionId).then(function (reply) {
     idExisting = reply
     // console.log('get usr id exisitence status: ' + reply)
   }).catch(function (err) {
     logger.error('get usr id exisitence error: ' + err)
   })
   if (idExisting) {
-    out = {
-      'sessionId': req.body.sessionId,
-      'result': []
-    }
+    out.status = 733
+    out.msg = statusCode.success['733']
+    out['result'] = []
     var sellerInfo = {
       account: '',
       toAdd: ''
@@ -31,7 +32,7 @@ module.exports = async function (req, res) {
       nonce: ''
     }
     // fetch necessary variables for transactions
-    await redisClient.getAsync('id:' + req.body.sessionId).then(function (reply) {
+    await redisClient.getAsync('id:' + out.sessionId).then(function (reply) {
       // console.log('get usr account name status: OK')
       sellerInfo.account = reply
     }).catch(function (err) {
@@ -139,8 +140,11 @@ module.exports = async function (req, res) {
       })
     }
     logger.action(sellerInfo.account + ' deliveried ' + req.body.tx.length + ' transactions.')
+  } else {
+    out.status = 834
+    out.msg = statusCode.illegal['834']
   }
-  if (out.msg === 'failed') {
+  if (out.status !== 733) {
     logger.warn('illegal deliverying transactions from ' + req.ip)
   }
   await redisClient.quitAsync()

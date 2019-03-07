@@ -6,23 +6,29 @@
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    status: '',
+    msg: '',
+    sessionId: req.params.sessionId
   }
-  var idExisting = 0
-  await redisClient.existsAsync('id:' + req.params.sessionId).then(function (reply) {
+  let idExisting
+  await redisClient.existsAsync('id:' + out.sessionId).then(function (reply) {
     idExisting = reply
   }).catch(function (err) {
     logger.error('get usr id existence error: ' + err)
   })
   if (idExisting) {
+    out.status = 723
+    out.msg = statusCode.success['723']
     var account = ''
-    await redisClient.getAsync('id:' + req.params.sessionId).then(function (reply) {
+    await redisClient.getAsync('id:' + out.sessionId).then(function (reply) {
       account = reply
     }).catch(function (err) {
       logger.error('get usr account name error: ' + err)
     })
     await redisClient.hgetallAsync('usr:' + account).then(function (reply) {
-      out = reply
+      for (let item in reply) {
+        out[item] = reply[item]
+      }
     }).catch(function (err) {
       logger.error('get usr account variables error: ' + err)
     })
@@ -55,10 +61,12 @@ module.exports = async function (req, res) {
     }).catch(function (err) {
       logger.error('get usr:account:purchase status: ' + err)
     })
-    out['sessionId'] = req.params.sessionId
     logger.action(account + ' requested for account info.')
+  } else {
+    out.status = 825
+    out.msg = statusCode.illegal['825']
   }
-  if (out.msg === 'failed') {
+  if (out.status !== 723) {
     logger.warn('illegal fetching acocunt info from ' + req.ip)
   }
   await redisClient.quitAsync()

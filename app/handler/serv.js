@@ -24,7 +24,7 @@ exports.testCon = async function () {
     logger.error('Error: ' + err)
   })
   await redisClient.onAsync('connect').then(function () {
-    logger.log('connected to redis successfully.')
+    logger.log(statusCode.success['712'])
   })
   await redisClient.quitAsync()
 }
@@ -36,7 +36,7 @@ exports.init = async function () {
     logger.error('Error: ' + err)
   })
   await redisClient.onAsync('connect').then(function () {
-    logger.log('connected to redis successfully.')
+    logger.log(statusCode.success['712'])
   })
 
   logger.seg('--------------------REDIS INITIALIZATION START--------------------')
@@ -98,7 +98,8 @@ exports.init = async function () {
 exports.show = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    status: '',
+    msg: ''
   }
   await redisClient.getAsync('global:usrNum').then(function (reply) {
     out['usrNum'] = reply
@@ -171,9 +172,9 @@ exports.show = async function (req, res) {
     logger.error('get global powerUnit error: ' + err)
   })
   delete out['msg']
-  logger.log('global data fetched.')
-  if (out.msg === 'failed') {
-    logger.warn('failed to fetch global data.')
+  logger.log(statusCode.success['713'])
+  if (out.status !== 713) {
+    logger.warn(statusCode.illegal['811'])
   }
   await redisClient.quitAsync()
   res.send(out)
@@ -187,9 +188,9 @@ exports.save = async function () {
   }
   await redisClient.saveAsync().then(function (reply) {
     out.msg = 'all data saved to disk status:' + reply
-    logger.log('all data saved to disk.')
+    logger.log(statusCode.success['714'])
   }).catch(function (err) {
-    logger.error('persisting data error: ' + err)
+    logger.error(statusCode.illegal['812'] + err)
   })
   await redisClient.quitAsync()
   res.send(out)

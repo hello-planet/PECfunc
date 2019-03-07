@@ -27,14 +27,14 @@ module.exports = async function (req, res) {
     })
     if (txPurchased) {
       out.status = 835
-      out.msg = 'transaction already purchased'
+      out.msg = statusCode.illegal['835']
     } else {
       out.status = 734
-      out.msg = 'transaction still available'
+      out.msg = statusCode.success['734']
     }
   } else {
     out.status = 836
-    out.msg = 'transaction undefined'
+    out.msg = statusCode.illegal['836']
   }
   await redisClient.quitAsync()
   res.send(out)

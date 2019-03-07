@@ -1,4 +1,4 @@
-# Functions
+# Functions (deprecated)
 
 
 
@@ -6,7 +6,7 @@
 
 ```pseudocode
 INPUT
-	// TODO
+	// details in app/handler/serv.js
 OUTPUT
 ```
 
@@ -42,15 +42,14 @@ OUTPUT {msg}
 ```pseudocode
 INPUT {account, password, time}
 new json loginRes
-if (redis.exists('usr:' + input.account)) {
+if (redis.exists('usr:' + input.account)) 
 	if (hash(input.password) == redis.hget('usr:' + input.account, 'password'))
 		// set sessionId
 		sessionId = hash(input.account | input.time)
 		redis.set('id:' + sessionId, input.account)
 		loginRes.write(msg = 'passed', sessionId)
-}else{
+else
 	loginRes.write(msg = 'failed', sessionId = null)
-}
 return loginRes
 OUTPUT loginRes
 ```
@@ -187,7 +186,7 @@ OUTPUT deliveryRes
 
 ```pseudocode
 INPUT
-	// TODO with persistence operations
+	// details in app/handler/logout.js
 OUTPUT
 ```
 

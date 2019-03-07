@@ -4,28 +4,29 @@
  */
 
 module.exports = async function (req, res) {
-  var redisClient = redisServer .createClient(redisCfg)
+  var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    status: '',
+    msg: '',
+    sessionId: req.body.sessionId
   }
   var idExisting = 0
-  await redisClient.existsAsync('id:' + req.body.sessionId).then(function (reply) {
+  await redisClient.existsAsync('id:' + out.sessionId).then(function (reply) {
     idExisting = reply
     // console.log('get usr id exisitence status: ' + reply)
   }).catch(function (err) {
     logger.error('get usr id exisitence error: ' + err)
   })
   if (idExisting) {
-    out = {
-      'sessionId': req.body.sessionId,
-      'result': []
-    }
+    out.status = 732
+    out.msg = statusCode.success['732']
+    out['result'] = []
     var buyerInfo = {
       account: '',
       fromAdd: ''
     }
     // fetch buyer's info
-    await redisClient.getAsync('id:' + req.body.sessionId).then(function (reply) {
+    await redisClient.getAsync('id:' + out.sessionId).then(function (reply) {
       // console.log('get usr account name status: OK')
       buyerInfo.account = reply
     }).catch(function (err) {
@@ -35,7 +36,7 @@ module.exports = async function (req, res) {
       // console.log('get buyer\'s address status: ' + reply)
       buyerInfo.fromAdd = reply
     }).catch(function (err) {
-      logger.log('get usr account address error: ' + err)
+      logger.error('get usr account address error: ' + err)
     })
     // console.log(buyerInfo)
     // count for number of successful transactions
@@ -140,8 +141,11 @@ module.exports = async function (req, res) {
       out.result.push(oneTx)
     }
     logger.action(buyerInfo.account + ' purchased ' + (req.body.tx.length - txCount) + ' transactions.')
+  } else {
+    out.status = 832
+    out.msg = statusCode.illegal['832']
   }
-  if (out.msg === 'failed') {
+  if (out.status !== 732) {
     logger.warn('illegal purchasing transactions from' + req.ip)
   }
   await redisClient.quitAsync()

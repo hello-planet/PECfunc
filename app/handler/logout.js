@@ -6,9 +6,10 @@
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    status: '',
+    msg: ''
   }
-  var idExisting = 0
+  let idExisting
   await redisClient.existsAsync('id:' + req.body.sessionId).then(function (reply) {
     idExisting = reply
     // console.log('get usr id exisitence status: ' + reply)
@@ -28,10 +29,14 @@ module.exports = async function (req, res) {
     }).catch(function (err) {
       logger.error('delete usr id error: ' + err)
     })
-    out.msg = 'logout'
     logger.action(account + ' logged out.')
+    out.status = 724
+    out.msg = statusCode.success['724']
+  } else {
+    out.status = 827
+    out.msg = statusCode.illegal['827']
   }
-  if (out.msg === 'failed') {
+  if (out.status !== 724) {
     logger.warn('illegal logging out from ' + req.ip)
   }
   await redisClient.quitAsync()

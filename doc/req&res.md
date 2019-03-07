@@ -31,7 +31,6 @@ All CRUD operations conducted via RESTful HTTP requests.
             "_method": "PUT",
             "_path": "/tx/purchase",
             "sessionId": "",
-            "msg": "purchase",
             "timestampBuy": "",
             "tx": [
                 {
@@ -43,13 +42,12 @@ All CRUD operations conducted via RESTful HTTP requests.
             "_method": "POST",
             "_path": "/tx/delivery",
             "sessionId": "",
-            "msg": "delivery",
             "timestampSell": "",
             "tx": [
                 {
                     "value": "",
                     "amount": "",
-                    "type": "wind/light/water",
+                    "type": "",
                     "inputData": ""
                 }
             ]
@@ -57,12 +55,15 @@ All CRUD operations conducted via RESTful HTTP requests.
         "logout": {
             "_method": "DELETE",
             "_path": "/usr/logout",
-            "sessionId": "",
-            "msg": "logout"
+            "sessionId": ""
         },
         "alive": {
             "_methond": "GET",
             "_path": "/usr/alive/:sessionId"
+    	},
+        "available": {
+            "_methond": "GET",
+            "_path": "/tx/available/:txId"
     	},
         "show": {
             "_method": "GET",
@@ -74,21 +75,30 @@ All CRUD operations conducted via RESTful HTTP requests.
 
 ### response
 
+All msg fields will be shown for debugging and deleted in production enviroment.
+
 ```json
 {
     "response": {
         "signup": {
-            "msg": "failed/succeed"
+            "status": "",
+            "msg": "",
+            "text": "(Optional. password requirements)"
         },
         "login": {
-            "msg": "failed/passed",
-            "sessionId": ""
+            "status": "",
+            "msg": "",
+            "sessionId": "(Optional)"
         },
         "account": {
+            "status": "",
+            "msg": "",
             "sessionId": "",
             "account": "",
             "balance": "",
             "address": "",
+            "deliveryNum": "",
+            "purchaseNum": "",
             "delivery": [
                 {
                     "txHash": "",
@@ -98,7 +108,7 @@ All CRUD operations conducted via RESTful HTTP requests.
                     "timestampBuy": "",
                     "value": "",
                     "amount": "",
-                    "type": "wind/light/water",
+                    "type": "",
                     "from": "",
                     "to": "",
                     "nonce": "",
@@ -114,17 +124,17 @@ All CRUD operations conducted via RESTful HTTP requests.
                     "timestampBuy": "",
                     "value": "",
                     "amount": "",
-                    "type": "wind/light/water",
+                    "type": "",
                     "from": "",
                     "to": "",
                     "nonce": "",
                     "inputData": ""
                 }
-            ],
-            "deliveryNum": "",
-            "purchaseNum": ""
+            ]
         },
         "pool": {
+            "status": "",
+            "msg": "",
             "sessionId": "",
             "tx": [
                 {
@@ -135,7 +145,7 @@ All CRUD operations conducted via RESTful HTTP requests.
                     "timestampBuy": "",
                     "value": "",
                     "amount": "",
-                    "type": "wind/light/water",
+                    "type": "",
                     "from": "",
                     "to": "",
                     "nonce": "",
@@ -144,17 +154,21 @@ All CRUD operations conducted via RESTful HTTP requests.
             ]
         },
         "purchase": {
+            "status": "",
+            "msg": "",
             "sessionId": "",
-            "result": [
+            "results": [
                 {
                     "txHash": "",
-                    "msg": "succeed/failed"
+                    "result": "succeed/failed"
                 }
             ]
         },
         "delivery": {
+            "status": "",
+            "msg": "",
             "sessionId": "",
-            "result": [
+            "results": [
                 {
                     "txHash": "",
                     "status": "waiting",
@@ -163,23 +177,31 @@ All CRUD operations conducted via RESTful HTTP requests.
                     "timestampBuy": "",
                     "value": "",
                     "amount": "",
-                    "type": "wind/light/water",
+                    "type": "",
                     "from": "",
                     "to": "",
                     "nonce": "",
                     "inputData": "",
-                    "msg": "succeed/failed"
+                    "result": "succeed/failed"
                 }
             ]
         },
         "logout": {
-            "msg": "failed/logout"
+            "status": "",
+            "msg": ""
         },
         "alive": {
-            "sessionId": "",
-            "msg": "alive/dead"
+            "status": "",
+            "msg": "",
+            "sessionId": ""
+    	},
+        "available": {
+            "status": "",
+            "msg": "",
+            "txId": ""
     	},
         "show": {
+            "status": "",
             "usrNum": "",
             "poolNum": "",
             "txNum": "",
@@ -194,7 +216,6 @@ All CRUD operations conducted via RESTful HTTP requests.
     }
 }
 ```
-
 
 
 EOF

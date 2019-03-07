@@ -6,20 +6,21 @@
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    status: '',
+    msg: '',
+    sessionId: req.params.sessionId
   }
-  var idExisting = 0
-  await redisClient.existsAsync('id:' + req.params.sessionId).then(function (reply) {
+  let idExisting
+  await redisClient.existsAsync('id:' + out.sessionId).then(function (reply) {
     // console.log('get usr id exisitence status: ' + reply)
     idExisting = reply
   }).catch(function (err) {
     logger.error('get usr id exisitence error: ' + err)
   })
   if (idExisting) {
-    out = {
-      'sessionId': req.params.sessionId,
-      'tx': []
-    }
+    out.status = 731
+    out.msg = statusCode.success['731']
+    out['tx'] = []
     await redisClient.smembersAsync('global:poolList').then(async function (replies) {
       for (let tx of replies) {
         await redisClient.hgetallAsync('tx:' + tx).then(function (reply) {
@@ -35,15 +36,18 @@ module.exports = async function (req, res) {
       logger.error('get global:poolList error: ' + err)
     })
     // obtain usr account
-    var account = ''
-    await redisClient.getAsync('id:' + req.params.sessionId).then(function (reply) {
+    let account
+    await redisClient.getAsync('id:' + out.sessionId).then(function (reply) {
       account = reply
+      logger.action(account + ' requested for pool info.')
     }).catch(function (err) {
       logger.error('get usr account name error: ' + err)
     })
-    logger.action(account + ' requested for pool info.')
+  } else {
+    out.status = 831
+    out.msg = statusCode.illegal['831']
   }
-  if (out.msg === 'failed') {
+  if (out.status !== 731) {
     logger.warn('illegal fetching pool info from ' + req.ip)
   }
   await redisClient.quitAsync()

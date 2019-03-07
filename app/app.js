@@ -90,7 +90,7 @@ const server = app.listen(port, function (err) {
     log.error('server start-up error: ' + err)
   } else {
     logger.seg('\n--------------------------SERVER STARTUP--------------------------')
-    logger.log('server started on ' + port)
+    logger.log(statusCode.success['711'] + ' (on ' + port + ')')
   }
 })
 

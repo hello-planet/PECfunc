@@ -7,22 +7,23 @@ const crypto = require('crypto')
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
-    'msg': 'failed'
+    status: '',
+    msg: ''
   }
-  var usrExisting = 0
+  let usrExisting
   await redisClient.existsAsync('usr:' + req.body.account).then(function (reply) {
     usrExisting = reply
   }).catch(function (err) {
     logger.error('get usr existence error: ' + err)
   })
   if (usrExisting) {
-    var matched = false
+    let writePw
     await redisClient.hgetAsync('usr:' + req.body.account, 'password').then(function (reply) {
-      matched = crypto.createHash('sha256').update(req.body.password).digest('hex') === reply
+      writePw = crypto.createHash('sha256').update(req.body.password).digest('hex') === reply
     }).catch(function (err) {
       logger.error('get usr password error: ' + err)
     })
-    if (matched) {
+    if (writePw) {
       var sessionId = crypto.createHash('sha256').update(req.body.account + new Date().getTime()).digest('hex')
       await redisClient.setAsync('id:' + sessionId, req.body.account).then(function (reply) {
         // console.log('set k-v sessionId-account status: ' + reply)
@@ -35,13 +36,20 @@ module.exports = async function (req, res) {
       }).catch(function (err) {
         logger.error('set sessionId-account expiration error: ' + err)
       })
-      out.msg = 'passed'
-      out['sessionId'] = sessionId
       logger.action(req.body.account + ' logged in.')
+      out.status = 722
+      out.msg = statusCode.success['722']
+      out['sessionId'] = sessionId
+    } else {
+      out.status = 824
+      out.msg = statusCode.illegal['824']
     }
+  } else {
+    out.status = 823
+    out.msg = statusCode.illegal['823']
   }
-  if (out.msg === 'failed'){
-    logger.warn('illegal logging in from '+req.ip)
+  if (out.status !== 722) {
+    logger.warn('illegal logging in from ' + req.ip)
   }
   await redisClient.quitAsync()
   res.send(out)
