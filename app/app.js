@@ -71,7 +71,7 @@ txApp.post('/delivery', require('./handler/delivery'))
 txApp.get('/available/:txId', require('./handler/available'))
 
 // serv middleware functions
-servApp.get('/show', serv.show)
+servApp.get('/show/:adminId', serv.show)
 servApp.get('/test', require('./test/test'))
 
 // mount the respective routers on app
@@ -87,7 +87,7 @@ app.use(serv.notfound)
 const port = process.env.appPORT || 8080
 const server = app.listen(port, function (err) {
   if (err) {
-    log.error('server start-up error: ' + err)
+    logger.error(statusCode.error['911'] + ' ' + err)
   } else {
     logger.seg('\n--------------------------SERVER STARTUP--------------------------')
     logger.log(statusCode.success['711'] + ' (on ' + port + ')')

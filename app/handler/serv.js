@@ -21,7 +21,7 @@ exports.testCon = async function () {
   var redisClient = redisServer.createClient(redisCfg)
   // test redis service availability
   redisClient.on('error', function (err) {
-    logger.error('Error: ' + err)
+    logger.error(statusCode.error['912'] + ' ' + err)
   })
   await redisClient.onAsync('connect').then(function () {
     logger.log(statusCode.success['712'])
@@ -52,7 +52,8 @@ exports.init = async function () {
     'global:poolNum', globalVar.poolNum,
     'global:blockHeight', globalVar.blockHeight,
     'global:nonce', globalVar.nonce,
-    'global:powerUnit', globalVar.powerUnit).then(function (reply) {
+    'global:powerUnit', globalVar.powerUnit
+  ).then(function (reply) {
     logger.action('redis global strings status: ' + reply)
   }).catch(function (err) {
     logger.error('redis global strings error: ' + err)
@@ -101,80 +102,86 @@ exports.show = async function (req, res) {
     status: '',
     msg: ''
   }
-  await redisClient.getAsync('global:usrNum').then(function (reply) {
-    out['usrNum'] = reply
-  }).catch(function (err) {
-    logger.error('get global usrNum error: ' + err)
-  })
-  await redisClient.getAsync('global:poolNum').then(function (reply) {
-    out['poolNum'] = reply
-  }).catch(function (err) {
-    logger.error('get global poolNum error: ' + err)
-  })
-  await redisClient.getAsync('global:txNum').then(function (reply) {
-    out['txNum'] = reply
-  }).catch(function (err) {
-    logger.error('get global txNum error: ' + err)
-  })
-  out['usrList'] = []
-  await redisClient.smembersAsync('global:usrList').then(function (replies) {
-    replies.forEach(async function (reply) {
-      if (reply !== 'default') {
-        out.usrList.push(reply)
-      }
+  if (req.params.adminId === crypto.createHash('sha256').update('admin').digest('hex')) {
+    out.status = 713
+    out.msg = statusCode.success['713']
+    await redisClient.getAsync('global:usrNum').then(function (reply) {
+      out['usrNum'] = reply
+    }).catch(function (err) {
+      logger.error('get global usrNum error: ' + err)
     })
-  }).catch(function (err) {
-    logger.error('get global usr list error: ' + err)
-  })
-  out['poolList'] = []
-  await redisClient.smembersAsync('global:poolList').then(function (replies) {
-    replies.forEach(async function (reply) {
-      if (reply !== 'default') {
-        out.poolList.push(reply)
-      }
+    await redisClient.getAsync('global:poolNum').then(function (reply) {
+      out['poolNum'] = reply
+    }).catch(function (err) {
+      logger.error('get global poolNum error: ' + err)
     })
-  }).catch(function (err) {
-    logger.error('get global pool list error: ' + err)
-  })
-  out['finishList'] = []
-  await redisClient.smembersAsync('global:finishList').then(function (replies) {
-    replies.forEach(async function (reply) {
-      if (reply !== 'default') {
-        out.finishList.push(reply)
-      }
+    await redisClient.getAsync('global:txNum').then(function (reply) {
+      out['txNum'] = reply
+    }).catch(function (err) {
+      logger.error('get global txNum error: ' + err)
     })
-  }).catch(function (err) {
-    logger.error('get global finish list error: ' + err)
-  })
-  out['txList'] = []
-  await redisClient.smembersAsync('global:txList').then(function (replies) {
-    replies.forEach(async function (reply) {
-      if (reply !== 'default') {
-        out.txList.push(reply)
-      }
+    out['usrList'] = []
+    await redisClient.smembersAsync('global:usrList').then(function (replies) {
+      replies.forEach(async function (reply) {
+        if (reply !== 'default') {
+          out.usrList.push(reply)
+        }
+      })
+    }).catch(function (err) {
+      logger.error('get global usr list error: ' + err)
     })
-  }).catch(function (err) {
-    logger.error('get global tx list error: ' + err)
-  })
-  await redisClient.getAsync('global:blockHeight').then(function (reply) {
-    out['blockHeight'] = reply
-  }).catch(function (err) {
-    logger.error('get global blockHeight error: ' + err)
-  })
-  await redisClient.getAsync('global:nonce').then(function (reply) {
-    out['nonce'] = reply
-  }).catch(function (err) {
-    logger.error('get global nonce error: ' + err)
-  })
-  await redisClient.getAsync('global:powerUnit').then(function (reply) {
-    out['powerUnit'] = reply
-  }).catch(function (err) {
-    logger.error('get global powerUnit error: ' + err)
-  })
-  delete out['msg']
-  logger.log(statusCode.success['713'])
+    out['poolList'] = []
+    await redisClient.smembersAsync('global:poolList').then(function (replies) {
+      replies.forEach(async function (reply) {
+        if (reply !== 'default') {
+          out.poolList.push(reply)
+        }
+      })
+    }).catch(function (err) {
+      logger.error('get global pool list error: ' + err)
+    })
+    out['finishList'] = []
+    await redisClient.smembersAsync('global:finishList').then(function (replies) {
+      replies.forEach(async function (reply) {
+        if (reply !== 'default') {
+          out.finishList.push(reply)
+        }
+      })
+    }).catch(function (err) {
+      logger.error('get global finish list error: ' + err)
+    })
+    out['txList'] = []
+    await redisClient.smembersAsync('global:txList').then(function (replies) {
+      replies.forEach(async function (reply) {
+        if (reply !== 'default') {
+          out.txList.push(reply)
+        }
+      })
+    }).catch(function (err) {
+      logger.error('get global tx list error: ' + err)
+    })
+    await redisClient.getAsync('global:blockHeight').then(function (reply) {
+      out['blockHeight'] = reply
+    }).catch(function (err) {
+      logger.error('get global blockHeight error: ' + err)
+    })
+    await redisClient.getAsync('global:nonce').then(function (reply) {
+      out['nonce'] = reply
+    }).catch(function (err) {
+      logger.error('get global nonce error: ' + err)
+    })
+    await redisClient.getAsync('global:powerUnit').then(function (reply) {
+      out['powerUnit'] = reply
+    }).catch(function (err) {
+      logger.error('get global powerUnit error: ' + err)
+    })
+    logger.log(statusCode.success['713'])
+  } else {
+    out.status = 811
+    out.msg = statusCode.illegal['811']
+  }
   if (out.status !== 713) {
-    logger.warn(statusCode.illegal['811'])
+    logger.warn('illegal fetching global data from ' + req.ip)
   }
   await redisClient.quitAsync()
   res.send(out)

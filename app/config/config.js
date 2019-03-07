@@ -70,5 +70,8 @@ module.exports = {
       911: 'Server port already been in use.',
       912: 'Database connection failed.'
     }
+  },
+  admin: {
+    password: 'sha256(\'admin\')'
   }
 }

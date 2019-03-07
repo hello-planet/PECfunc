@@ -67,7 +67,7 @@ All CRUD operations conducted via RESTful HTTP requests.
     	},
         "show": {
             "_method": "GET",
-            "_path": "/serv/show"
+            "_path": "/serv/show/:adminId"
         }
     }
 }
@@ -202,6 +202,7 @@ All msg fields will be shown for debugging and deleted in production enviroment.
     	},
         "show": {
             "status": "",
+            "msg": "",
             "usrNum": "",
             "poolNum": "",
             "txNum": "",

@@ -3,6 +3,7 @@
  * status: bug remains fixed
  */
 
+// TODO extend user expiration time
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {
