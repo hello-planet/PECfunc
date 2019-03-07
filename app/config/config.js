@@ -16,7 +16,18 @@ module.exports = {
     powerUnit: 0.5
   },
   password: {
-    demand_pattern: /^[\w_-]{6,16}$/
+    strong: {
+      pattern: /^.*(?=.{8,16})(?=.*\d)(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*[!@#$%^&*?\(\)]).*$/,
+      description: '8-16 bits characters. At least one number, one lowercase, one capital letter and one special characters.'
+    },
+    moderate: {
+      pattern: /^.*(?=.{6,16})(?=.*\d*)(?=.*[a-zA-Z]+)(?=.*[!@#$%^&*?\(\)]*).*$/,
+      description: '6-16 bits with numbers and lowercases. Optional capital letters and special characters.'
+    },
+    weak: {
+      pattern: /^[\w!@#$%^&*?\(\)]{3,16}$/,
+      description: '3-16 bits with any alphanumeric characters. Excluding special characters.'
+    }
   },
   status: {
     success: {
@@ -24,7 +35,7 @@ module.exports = {
       712: 'Database connected.',
       713: 'Global data fetched.',
       714: 'Global data persisted into disk.',
-      721: 'User Signed up.',
+      721: 'User Signed up successfully.',
       722: 'User logged in.',
       723: 'User account information fetched.',
       724: 'User logged out.',
@@ -37,7 +48,7 @@ module.exports = {
     illegal: {
       811: 'Invalid session ID (for fetching global data).',
       812: 'Global data persistence failed.',
-      821: 'Account name already been in use.',
+      821: 'Account name has already been in use.',
       822: 'Password not strong enough.',
       823: 'Account name does not exist.',
       824: 'Incorrect password.',
