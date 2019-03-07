@@ -45,6 +45,8 @@ All CRUD operations conducted via RESTful HTTP requests.
             "timestampSell": "",
             "tx": [
                 {
+                    "timestampExpire": "",
+                    "power": "",
                     "value": "",
                     "amount": "",
                     "type": "",
@@ -106,6 +108,8 @@ All msg fields will be shown for debugging and deleted in production enviroment.
                     "blockHeight": "",
                     "timestampSell": "",
                     "timestampBuy": "",
+                    "timestampExpire": "",
+                    "power": "",
                     "value": "",
                     "amount": "",
                     "type": "",
@@ -122,6 +126,8 @@ All msg fields will be shown for debugging and deleted in production enviroment.
                     "blockHeight": "",
                     "timestampSell": "",
                     "timestampBuy": "",
+                    "timestampExpire": "",
+                    "power": "",
                     "value": "",
                     "amount": "",
                     "type": "",

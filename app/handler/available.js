@@ -1,8 +1,9 @@
 /**
  * check the tx availabilty
- * status: passed
+ * status: fix feature
  */
 
+// TODO add timestampexpire check
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {

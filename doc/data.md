@@ -53,6 +53,7 @@ All txinfo associated with one transaction will be stored in **Hash** type. The 
         "timestampSell": "",
         "timestampBuy": "",
         "timestampExpire": "",
+        "power": "",
         "value": "",
         "amount": "",
         "type": "",

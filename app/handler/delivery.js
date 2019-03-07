@@ -71,6 +71,8 @@ module.exports = async function (req, res) {
         'blockHeight', globalVar.blockHeight,
         'timestampSell', req.body.timestampSell,
         'timestampBuy', '',
+        'timestampExpire', tx.timestampExpire,
+        'power', tx.power,
         'value', 0,
         'amount', tx.amount,
         'type', tx.type,
