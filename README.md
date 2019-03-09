@@ -41,7 +41,6 @@ The terminal will track the server actions. Feel free to check the log files in 
 ### Issues & Updates
 
 * [Issues](doc/issue\&update.md#issues)
-
 * [Updates](doc/issue\&update.md#updates)
 
 [js-style-image ]: https://img.shields.io/badge/code_style-standard-brightgreen.svg

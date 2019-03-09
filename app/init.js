@@ -72,7 +72,7 @@ txApp.get('/available/:txId', require('./handler/available'))
 
 // serv middleware functions
 servApp.get('/show/:adminId', serv.show)
-servApp.get('/test', require('./test/test'))
+servApp.get('/test', require('./test/http'))
 
 // mount the respective routers on app
 app.use('/usr', usrApp)
