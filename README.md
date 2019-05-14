@@ -23,11 +23,11 @@ $ npm install
 ```
 Initialize server for the first time with clean database.
 ```shell
-$ npm run init
+# npm run init
 ```
 Start server with data stored or restart server.
 ```shell
-$ npm start
+# npm start
 ```
 The terminal will track the server actions. Feel free to check the log files in `./log` directory. 
 

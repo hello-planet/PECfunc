@@ -28,7 +28,7 @@ module.exports = {
       pattern: /^[\w!@#$%^&*?\(\)]{3,16}$/,
       description: '3-16 bits with any alphanumeric characters. Excluding special characters.'
     },
-    worstOf2018: {
+    worstOfHistory: {
       pattern: 123456,
       description: 'Come on! you call this a password?'
     }
@@ -72,6 +72,11 @@ module.exports = {
     }
   },
   admin: {
-    password: 'sha256(\'admin\')'
+    password: 'admin'
+  },
+  testUsr: {
+    alice: '123456',
+    bob: '123456',
+    carl: '123456'
   }
 }

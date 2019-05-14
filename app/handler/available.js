@@ -3,7 +3,7 @@
  * status: fix feature
  */
 
-// TODO add timestampexpire check
+// TODO add timestampexpire check and invalid all expired tx.
 module.exports = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {

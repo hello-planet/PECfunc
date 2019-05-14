@@ -16,7 +16,7 @@
 	For the corresponding information in different situations.
   
 - 2019.3.5 Add tx verification handler.
-	For transaction validation before purchased to avoid request failure invoked by data inconsistency.
+	For transaction validation before purchasement to avoid request failure invoked by data inconsistency.
   
 - 2019.3.6 Add password strength verification.
 	Three strength levels to set and default is moderate.
