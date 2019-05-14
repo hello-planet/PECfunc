@@ -116,7 +116,7 @@ exports.show = async function (req, res) {
     out.msg = statusCode.illegal['811']
   }
   if (out.status !== 713) {
-    logger.warn('illegal fetching global data from ' + req.ip)
+    logger.warn('illegal fetching global data from ' + req.ip + '\n\t\t\t\t' + 'REQ:  ' + JSON.stringify(req.params) + '\n\t\t\t\t' + 'MSG:  ' + out.msg)
   }
   await redisClient.quitAsync()
   res.send(out)

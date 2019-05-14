@@ -82,7 +82,7 @@ module.exports = async function (req, res) {
     }
   }
   if (out.status !== 721) {
-    logger.warn('illegal signing up from ' + req.ip)
+    logger.warn('illegal signing up from ' + req.ip + '\n\t\t\t\t' + 'REQ:  ' + JSON.stringify(req.body) + '\n\t\t\t\t' + 'MSG:  ' + out.msg)
   }
   await redisClient.quitAsync()
   res.send(out)

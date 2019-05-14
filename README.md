@@ -29,6 +29,12 @@ Start server with data stored or restart server.
 ```shell
 # npm start
 ```
+Populate database with test-aimed users.
+
+```shell
+# npm run populate
+```
+
 The terminal will track the server actions. Feel free to check the log files in `./log` directory. 
 
 ### Conventions

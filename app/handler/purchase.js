@@ -146,7 +146,7 @@ module.exports = async function (req, res) {
     out.msg = statusCode.illegal['832']
   }
   if (out.status !== 732) {
-    logger.warn('illegal purchasing transactions from' + req.ip)
+    logger.warn('illegal purchasing transactions from' + req.ip + '\n\t\t\t\t' + 'REQ:  ' + JSON.stringify(req.body) + '\n\t\t\t\t' + 'MSG:  ' + out.msg)
   }
   await redisClient.quitAsync()
   res.send(out)

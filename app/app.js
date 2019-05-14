@@ -9,6 +9,7 @@ const {
 
 // etc lib
 const bodyParser = require('body-parser')
+const multer = require('multer')
 const pathParser = require('path')
 
 // init pec-server
@@ -38,8 +39,10 @@ serv.testCon()
 // serv.init()
 
 // server level settings
+var upload = multer()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+
 app.set('trust proxy', true)
 app.set('trust proxy', 'loopback')
 app.all('*', function (req, res, next) {
@@ -58,16 +61,16 @@ app.use('/demo', express.static(pathParser.join(__dirname, '../wwwroot')))
 app.get('/', serv.index)
 
 // usr middleware funcitons
-usrApp.post('/signup', require('./handler/signup'))
-usrApp.post('/login', require('./handler/login'))
+usrApp.post('/signup', upload.array(), require('./handler/signup'))
+usrApp.post('/login', upload.array(), require('./handler/login'))
 usrApp.get('/account/:sessionId', require('./handler/account'))
-usrApp.delete('/logout', require('./handler/logout'))
+usrApp.delete('/logout', upload.array(), require('./handler/logout'))
 usrApp.get('/alive/:sessionId', require('./handler/alive'))
 
 // tx middleware functions
 txApp.get('/pool/:sessionId', require('./handler/pool'))
-txApp.put('/purchase', require('./handler/purchase'))
-txApp.post('/delivery', require('./handler/delivery'))
+txApp.put('/purchase', upload.array(), require('./handler/purchase'))
+txApp.post('/delivery', upload.array(), require('./handler/delivery'))
 txApp.get('/available/:txId', require('./handler/available'))
 
 // serv middleware functions
