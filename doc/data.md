@@ -31,7 +31,7 @@ Partial usrinfo associated with one account will be stored in **Hash** type, exc
     	"account": "",
     	"password": "",
     	"balance": "",
-    	"address": "",
+    	"address": "(uint160)",
     	"deliveryNum": "",
     	"purchaseNum": "",
     	"deliveryList": [],
@@ -48,7 +48,7 @@ All txinfo associated with one transaction will be stored in **Hash** type. The 
 {
     "tx": {
         "txHash": "",
-        "status": "",
+        "status": "waiting/succeeded",
         "blockHeight": "",
         "timestampSell": "",
         "timestampBuy": "",
@@ -56,7 +56,7 @@ All txinfo associated with one transaction will be stored in **Hash** type. The 
         "power": "",
         "value": "",
         "amount": "",
-        "type": "",
+        "type": "solar/water/wind",
         "from": "",
         "to": "",
         "nonce": "",

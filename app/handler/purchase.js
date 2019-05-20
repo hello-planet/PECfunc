@@ -10,7 +10,7 @@ module.exports = async function (req, res) {
     msg: '',
     sessionId: req.body.sessionId
   }
-  var idExisting = 0
+  let idExisting
   await redisClient.existsAsync('id:' + out.sessionId).then(function (reply) {
     idExisting = reply
     // console.log('get usr id exisitence status: ' + reply)

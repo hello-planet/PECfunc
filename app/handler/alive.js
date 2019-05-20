@@ -1,6 +1,6 @@
 /**
  * check the aliveness
- * status: bug remains fixed
+ * status: issue remains fixed
  */
 
 // TODO extend user expiration time

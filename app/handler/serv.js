@@ -30,7 +30,7 @@ exports.testCon = async function () {
 }
 
 // show global variables
-// TODO need a safer administration permission
+// TODO need a safer administration permission. Now a temprary solution
 exports.show = async function (req, res) {
   var redisClient = redisServer.createClient(redisCfg)
   var out = {

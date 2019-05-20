@@ -64,6 +64,7 @@ module.exports = async function (req, res) {
     })
     // write transactions
     for (let tx of req.body.tx) {
+      // TODO txHash generation remained or not?
       var txHash = crypto.createHash('sha256').update(sellerInfo.account + new Date().getTime()).digest('hex')
       await redisClient.hmsetAsync('tx:' + txHash, [
         'txHash', txHash,
@@ -78,6 +79,7 @@ module.exports = async function (req, res) {
         'type', tx.type,
         'from', '',
         'to', sellerInfo.toAdd,
+        // TODO determine whether remain the field $(nonce)
         'nonce', globalVar.nonce,
         'inputData', tx.inputData
       ]).then(function (reply) {

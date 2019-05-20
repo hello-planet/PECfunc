@@ -24,6 +24,7 @@ module.exports = async function (req, res) {
     out.msg = statusCode.illegal['821']
   } else {
     if (pwDemand.moderate.pattern.test(req.body.password)) {
+      // TODO modify the user address generation to suit ETH.
       var address = crypto.createHash('sha256').update(req.body.account + req.body.password).digest('hex')
       var password = crypto.createHash('sha256').update(req.body.password).digest('hex')
 
