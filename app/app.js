@@ -78,6 +78,7 @@ txApp.get('/revoke/:sessionId/:txId', require('./handler/revoke'))
 
 // serv middleware functions
 servApp.get('/show/:adminId', serv.show)
+servApp.get('/pool/:adminId', serv.pool)
 
 // mount the respective routers on app
 app.use('/usr', usrApp)

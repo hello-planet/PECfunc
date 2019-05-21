@@ -147,3 +147,29 @@ exports.save = async function () {
   await redisClient.quitAsync()
   res.send(out)
 }
+
+// show pool txs detials
+// for simulating trade use only
+exports.pool = async function (req, res) {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
+    txs: []
+  }
+  if (req.params.adminId === crypto.createHash('sha256').update(require('../config/config').admin.password).digest('hex')) {
+    await redisClient.smembersAsync('global:poolList').then(async function (replies) {
+      for (let tx of replies) {
+        await redisClient.hgetallAsync('tx:' + tx).then(function (reply) {
+          if (reply) {
+            out.txs.push(reply)
+          }
+        }).catch(function (err) {
+          logger.error('get tx from gloabl:poolList error: ' + err)
+        })
+      }
+    }).catch(function (err) {
+      logger.error('get gloabl:poolList status: ' + err)
+    })
+  }
+  await redisClient.quitAsync()
+  res.send(out)
+}
