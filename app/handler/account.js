@@ -4,8 +4,8 @@
  */
 
 module.exports = async function (req, res) {
-  var redisClient = redisServer.createClient(redisCfg)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     status: '',
     msg: '',
     sessionId: req.params.sessionId
@@ -19,7 +19,7 @@ module.exports = async function (req, res) {
   if (idExisting) {
     out.status = 723
     out.msg = statusCode.success['723']
-    var account = ''
+    let account
     await redisClient.getAsync('id:' + out.sessionId).then(function (reply) {
       account = reply
     }).catch(function (err) {
@@ -35,6 +35,7 @@ module.exports = async function (req, res) {
     delete out['password']
     out['delivery'] = []
     out['purchase'] = []
+    out['revoke'] = []
     await redisClient.smembersAsync('usr:' + account + ':delivery').then(async function (replies) {
       for (let tx of replies) {
         await redisClient.hgetallAsync('tx:' + tx).then(function (reply) {
@@ -60,6 +61,19 @@ module.exports = async function (req, res) {
       }
     }).catch(function (err) {
       logger.error('get usr:account:purchase status: ' + err)
+    })
+    await redisClient.smembersAsync('usr:' + account + ':revoke').then(async function (replies) {
+      for (let tx of replies) {
+        await redisClient.hgetallAsync('tx:' + tx).then(function (reply) {
+          if (reply) {
+            out.revoke.push(reply)
+          }
+        }).catch(function (err) {
+          logger.error('get tx from usr:account:revoke error: ' + err)
+        })
+      }
+    }).catch(function (err) {
+      logger.error('get usr:account:revoke status: ' + err)
     })
     logger.action(account + ' requested for account info.')
   } else {

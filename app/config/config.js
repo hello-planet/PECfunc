@@ -47,7 +47,8 @@ module.exports = {
       731: 'Transaction pool information fetched.',
       732: 'Transactions purchased successfully.',
       733: 'Transactions deliveried successfully.',
-      734: 'Transaction still valid.'
+      734: 'Transaction still valid.',
+      735: 'Transaction revoked successfully.'
     },
     illegal: {
       811: 'Invalid session ID for fetching global data.',
@@ -64,7 +65,10 @@ module.exports = {
       833: 'Transaction not available.',
       834: 'Illegal session ID for delivery.',
       835: 'Transaction purchased.',
-      836: 'Transaction undefined.'
+      836: 'Transaction undefined.',
+      837: 'Illegal session ID for revoke.',
+      838: 'Transaction not found in user\'s tx list.',
+      839: 'Transaction to be revoked has been purchased.'
     },
     error: {
       911: 'Server port already been in use.',
@@ -73,6 +77,10 @@ module.exports = {
   },
   admin: {
     password: 'admin'
+  },
+  transaction: {
+    status: ['waiting', 'succeeded', 'revoked'],
+    type: ['solar', 'water', 'wind']
   },
   testUsr: {
     alice: '123456',

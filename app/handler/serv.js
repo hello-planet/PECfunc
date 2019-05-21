@@ -13,12 +13,12 @@ exports.index = function (req, res) {
 // 404 page
 exports.notfound = function (req, res) {
   res.status(404).send('It seems that you\'ve found something unreal on this planet. :D')
-  logger.warn('404 warning omitted')
+  logger.warn('404 warning emitted' + '\n\t\t\t\t' + 'PATH: ' + req.originalUrl + '\n\t\t\t\t' + 'REQ:  ' + JSON.stringify(req.body))
 }
 
 // test database connection
 exports.testCon = async function () {
-  var redisClient = redisServer.createClient(redisCfg)
+  let redisClient = redisServer.createClient(redisCfg)
   // test redis service availability
   redisClient.on('error', function (err) {
     logger.error(statusCode.error['912'] + ' ' + err)
@@ -32,12 +32,12 @@ exports.testCon = async function () {
 // show global variables
 // TODO need a safer administration permission. Now a temprary solution
 exports.show = async function (req, res) {
-  var redisClient = redisServer.createClient(redisCfg)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     status: '',
     msg: ''
   }
-  if (req.params.adminId === crypto.createHash('sha256').update(serverConfig.admin.password).digest('hex')) {
+  if (req.params.adminId === crypto.createHash('sha256').update(require('../config/config').admin.password).digest('hex')) {
     out.status = 713
     out.msg = statusCode.success['713']
     await redisClient.getAsync('global:usrNum').then(function (reply) {
@@ -95,6 +95,16 @@ exports.show = async function (req, res) {
     }).catch(function (err) {
       logger.error('get global tx list error: ' + err)
     })
+    out['revokeList'] = []
+    await redisClient.smembersAsync('global:revokeList').then(function (replies) {
+      replies.forEach(async function (reply) {
+        if (reply !== 'default') {
+          out.revokeList.push(reply)
+        }
+      })
+    }).catch(function (err) {
+      logger.error('get global revoke list error: ' + err)
+    })
     await redisClient.getAsync('global:blockHeight').then(function (reply) {
       out['blockHeight'] = reply
     }).catch(function (err) {
@@ -124,8 +134,8 @@ exports.show = async function (req, res) {
 
 // persist data into disk before server shutdown
 exports.save = async function () {
-  var redisClient = redisServer.createClient(serverConfig.redis)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     'msg': 'failed to save data to disk.'
   }
   await redisClient.saveAsync().then(function (reply) {

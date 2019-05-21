@@ -18,16 +18,18 @@ const usrApp = express.Router()
 const txApp = express.Router()
 const servApp = express.Router()
 
-// global variables
-const redis = require('redis')
-const bluebird = require('bluebird')
+// database
+var redis = require('redis')
+var bluebird = require('bluebird')
 bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
 global.redisServer = redis
+// configs
 var serverConfig = require('./config/config')
 global.globalVar = serverConfig.globalVar
 global.statusCode = serverConfig.status
 global.redisCfg = serverConfig.redis
+// utils
 global.logger = require('./utils/log')
 
 // server level handlers
@@ -72,10 +74,10 @@ txApp.get('/pool/:sessionId', require('./handler/pool'))
 txApp.put('/purchase', upload.array(), require('./handler/purchase'))
 txApp.post('/delivery', upload.array(), require('./handler/delivery'))
 txApp.get('/available/:txId', require('./handler/available'))
+txApp.get('/revoke/:sessionId/:txId', require('./handler/revoke'))
 
 // serv middleware functions
 servApp.get('/show/:adminId', serv.show)
-// servApp.get('/test', require('./test/tmp/http'))
 
 // mount the respective routers on app
 app.use('/usr', usrApp)

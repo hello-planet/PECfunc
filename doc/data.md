@@ -2,7 +2,7 @@
 
 ###  Global
 
-*usrNum*, *poolNum*, *txNum*, *blockHeight*, *nonce* and *powerUnit* come to be **String** type. *usrList*, *poolList*, *finishList*, *txList* are store in **Set** type.
+*usrNum*, *poolNum*, *txNum*, *blockHeight*, *nonce* and *powerUnit* come to be **String** type. *usrList*, *poolList*, *finishList*, *txList* are stored in **Set** type.
 
 ```json
 {
@@ -13,6 +13,7 @@
         "usrList": [],
         "poolList": [],
         "finishList": [],
+        "revokeList": [],
         "txList": [],
         "blockHeight": "",
         "nonce": "",
@@ -34,8 +35,10 @@ Partial usrinfo associated with one account will be stored in **Hash** type, exc
     	"address": "(uint160)",
     	"deliveryNum": "",
     	"purchaseNum": "",
+        "revokeNum": "",
     	"deliveryList": [],
-        "purchaseList": []
+        "purchaseList": [],
+        "revokeList": []
     }
 }
 ```
@@ -48,7 +51,7 @@ All txinfo associated with one transaction will be stored in **Hash** type. The 
 {
     "tx": {
         "txHash": "",
-        "status": "waiting/succeeded",
+        "status": "waiting/succeeded/revoked",
         "blockHeight": "",
         "timestampSell": "",
         "timestampBuy": "",

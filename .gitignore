@@ -28,3 +28,5 @@ _testmain.go
 /log/*.log
 /app/test/tmp/
 package-lock.json
+.travis.yml
+/app/app_test.js

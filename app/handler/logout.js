@@ -4,8 +4,8 @@
  */
 
 module.exports = async function (req, res) {
-  var redisClient = redisServer.createClient(redisCfg)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     status: '',
     msg: ''
   }
@@ -18,7 +18,7 @@ module.exports = async function (req, res) {
   })
   if (idExisting) {
     // obtain usr account
-    var account = ''
+    let account = ''
     await redisClient.getAsync('id:' + req.body.sessionId).then(function (reply) {
       account = reply
     }).catch(function (err) {

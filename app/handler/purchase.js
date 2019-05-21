@@ -4,8 +4,8 @@
  */
 
 module.exports = async function (req, res) {
-  var redisClient = redisServer.createClient(redisCfg)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     status: '',
     msg: '',
     sessionId: req.body.sessionId
@@ -21,7 +21,7 @@ module.exports = async function (req, res) {
     out.status = 732
     out.msg = statusCode.success['732']
     out['result'] = []
-    var buyerInfo = {
+    let buyerInfo = {
       account: '',
       fromAdd: ''
     }
@@ -40,10 +40,10 @@ module.exports = async function (req, res) {
     })
     // console.log(buyerInfo)
     // count for number of successful transactions
-    var txCount = 0
+    let txCount
     // update transactions
     for (let item of req.body.tx) {
-      var txHash = item.txHash
+      let txHash = item.txHash
       let checkSufficience = {
         txValue: '',
         usrBalance: ''
@@ -71,7 +71,7 @@ module.exports = async function (req, res) {
       }
       // update the transaction
       await redisClient.hmsetAsync('tx:' + txHash, [
-        'status', 'succeed',
+        'status', 'succeeded',
         'timestampBuy', req.body.timestampBuy,
         'from', buyerInfo.fromAdd
       ]).then(function (reply) {
@@ -97,6 +97,7 @@ module.exports = async function (req, res) {
         logger.error('get seller\'s account error: ' + err)
       })
       // console.log(sellerInfo)
+
       // change associated accounts' variables
       await redisClient.hincrbyAsync('usr:' + sellerInfo.account, 'balance', checkSufficience.txValue).then(function (reply) {
         // console.log('increase seller\'s balance status: ' + reply)
@@ -134,7 +135,7 @@ module.exports = async function (req, res) {
       }).catch(function (err) {
         logger.error('append tx to global finish list error: ' + err)
       })
-      var oneTx = {
+      let oneTx = {
         txHash: txHash,
         msg: 'succeed'
       }

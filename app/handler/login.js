@@ -5,8 +5,8 @@
 const crypto = require('crypto')
 
 module.exports = async function (req, res, next) {
-  var redisClient = redisServer.createClient(redisCfg)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     status: '',
     msg: ''
   }
@@ -24,7 +24,7 @@ module.exports = async function (req, res, next) {
       logger.error('get usr password error: ' + err)
     })
     if (writePw) {
-      var sessionId = crypto.createHash('sha256').update(req.body.account + new Date().getTime()).digest('hex')
+      let sessionId = crypto.createHash('sha256').update(req.body.account + new Date().getTime()).digest('hex')
       await redisClient.setAsync('id:' + sessionId, req.body.account).then(function (reply) {
         // console.log('set k-v sessionId-account status: ' + reply)
       }).catch(function (err) {

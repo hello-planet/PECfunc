@@ -52,6 +52,7 @@ Depending on specific circumstances.
 - **732** Transaction purchased.
 - **733** Transaction deliveried.
 - **734** Transaction still valid (for tx verification).
+- **735** Transaction revoked..
 
 ##### 8xx Illegal request
 
@@ -70,6 +71,9 @@ Depending on specific circumstances.
 - **834** Illegal session ID (for delivery).
 - **835** Transaction purchased (for tx verification).
 - **836** Transaction undefined (for tx verification)
+- **837** Illegal session ID (for revoke).
+- **838** Transaction unfound in user's txList.
+- **839** Transaction to be revoked has been purchased.
 
 ##### 9xx Service fault
 

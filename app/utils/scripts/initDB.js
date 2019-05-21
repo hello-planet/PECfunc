@@ -10,7 +10,7 @@ var serverConfig = require('../../config/config')
 globalVar = serverConfig.globalVar
 logger = require('../log')
 
-var redisClient = redisServer.createClient(serverConfig.redis)
+let redisClient = redisServer.createClient(serverConfig.redis)
 // test redis service availability
 redisClient.onAsync('error', function (err) {
   logger.error(serverConfig.status.error['912'] + '' + err)
@@ -54,5 +54,10 @@ redisClient.saddAsync('global:finishList', 'default').then(function (reply) {
   logger.action('redis global finishList set status: ' + reply)
 }).catch(function (err) {
   logger.error('redis global finishList set error: ' + err)
+})
+redisClient.saddAsync('global:revokeList', 'default').then(function (reply) {
+  logger.action('redis global revokeList set status: ' + reply)
+}).catch(function (err) {
+  logger.error('redis global revokeList set error: ' + err)
 })
 redisClient.quitAsync()

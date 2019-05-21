@@ -5,8 +5,8 @@
 
 // TODO extend user expiration time
 module.exports = async function (req, res) {
-  var redisClient = redisServer.createClient(redisCfg)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     status: '',
     msg: '',
     sessionId: req.params.sessionId

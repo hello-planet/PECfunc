@@ -11,7 +11,7 @@ bluebird.promisifyAll(redisServer.Multi.prototype)
 var serverConfig = require('../../config/config')
 logger = require('../log')
 
-var redisClient = redisServer.createClient(serverConfig.redis)
+let redisClient = redisServer.createClient(serverConfig.redis)
 // test redis service availability
 redisClient.onAsync('error', function (err) {
   logger.error(serverConfig.status.error['912'] + '' + err)

@@ -5,8 +5,8 @@
 const crypto = require('crypto')
 
 module.exports = async function (req, res) {
-  var redisClient = redisServer.createClient(redisCfg)
-  var out = {
+  let redisClient = redisServer.createClient(redisCfg)
+  let out = {
     status: '',
     msg: '',
     sessionId: req.body.sessionId
@@ -22,11 +22,11 @@ module.exports = async function (req, res) {
     out.status = 733
     out.msg = statusCode.success['733']
     out['result'] = []
-    var sellerInfo = {
+    let sellerInfo = {
       account: '',
       toAdd: ''
     }
-    var globalVar = {
+    let globalVar = {
       powerUnit: '',
       blockHeight: '',
       nonce: ''
@@ -65,7 +65,7 @@ module.exports = async function (req, res) {
     // write transactions
     for (let tx of req.body.tx) {
       // TODO txHash generation remained or not?
-      var txHash = crypto.createHash('sha256').update(sellerInfo.account + new Date().getTime()).digest('hex')
+      let txHash = crypto.createHash('sha256').update(sellerInfo.account + new Date().getTime()).digest('hex')
       await redisClient.hmsetAsync('tx:' + txHash, [
         'txHash', txHash,
         'status', 'waiting',
@@ -100,6 +100,7 @@ module.exports = async function (req, res) {
           logger.error('set tx value based on value error: ' + err)
         })
       }
+
       // change associated account's variables
       await redisClient.hincrbyAsync('usr:' + sellerInfo.account, 'deliveryNum', 1).then(function (reply) {
         // console.log('increment usr\'s tx number status:' + reply)
@@ -111,6 +112,7 @@ module.exports = async function (req, res) {
       }).catch(function (err) {
         logger.error('add usr\'s tx list error: ' + err)
       })
+
       // change global variables
       await redisClient.incrAsync('global:txNum').then(function (reply) {
         // console.log('increment global tx number status: ' + reply)

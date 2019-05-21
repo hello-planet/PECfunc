@@ -7,7 +7,7 @@ const pwDemand = require('../config/config').password
 const crypto = require('crypto')
 
 module.exports = async function (req, res) {
-  var redisClient = redisServer.createClient(redisCfg)
+  let redisClient = redisServer.createClient(redisCfg)
   let out = {
     status: '',
     msg: ''
@@ -25,8 +25,8 @@ module.exports = async function (req, res) {
   } else {
     if (pwDemand.moderate.pattern.test(req.body.password)) {
       // TODO modify the user address generation to suit ETH.
-      var address = crypto.createHash('sha256').update(req.body.account + req.body.password).digest('hex')
-      var password = crypto.createHash('sha256').update(req.body.password).digest('hex')
+      let address = crypto.createHash('sha256').update(req.body.account + req.body.password).digest('hex')
+      let password = crypto.createHash('sha256').update(req.body.password).digest('hex')
 
       // write usr
       await redisClient.hmsetAsync('usr:' + req.body.account, [
@@ -35,7 +35,8 @@ module.exports = async function (req, res) {
         'balance', 100,
         'address', address,
         'deliveryNum', 0,
-        'purchaseNum', 0
+        'purchaseNum', 0,
+        'revokeNum', 0
       ]).then(function (reply) {
         // console.log('usr main list status: ' + reply)
       }).catch(function (err) {
@@ -53,6 +54,12 @@ module.exports = async function (req, res) {
         // console.log('usr purchase list status: ' + reply)
       }).catch(function (err) {
         logger.error('usr purchase list error: ' + err)
+      })
+
+      await redisClient.saddAsync('usr:' + req.body.account + ':revoke', 'default').then(function (reply) {
+        // console.log('usr revoke list status: ' + reply)
+      }).catch(function (err) {
+        logger.error('usr revoke list error: ' + err)
       })
 
       // set index from address to account

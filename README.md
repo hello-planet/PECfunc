@@ -16,22 +16,22 @@ Make sure that you've had [Redis](https://redis.io/) server and Node.js installe
 
 Build the enviroment.
 
-```shell
+```
 $ git clone https://github.com/hello-planet/pec-server.git
 $ cd pec-server
 $ npm install
 ```
 Initialize server for the first time with clean database.
-```shell
+```
 # npm run init
 ```
 Start server with data stored or restart server.
-```shell
+```
 # npm start
 ```
 Populate database with test-aimed users.
 
-```shell
+```
 # npm run populate
 ```
 
@@ -40,9 +40,8 @@ The terminal will track the server actions. Feel free to check the log files in 
 ### Conventions
 
 * [Data Structure](doc/data.md)
-* [Request & Response](doc/req\&res.md)
+* [Service Interfaces](doc/handler.md)
 * [Status Code](doc/status.md)
-* [Functions](doc/func.md) (deprecated)
 
 ### Issues & Updates
 

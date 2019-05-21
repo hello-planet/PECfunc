@@ -10,7 +10,7 @@
     "db": "node app/utils/scripts/initDB.js",
     "standard": "standard && node $PWD/*.js",
     "dev": "node app/utils/scripts/initDB.js && nodemon app/app.js",
-    "test": "nodemon app/test/fake_app.js"
+    "test": "nodemon app/app_test.js"
   },
   "keywords": [
     "powexchain"
