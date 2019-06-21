@@ -40,7 +40,7 @@ module.exports = async function (req, res) {
     })
     // console.log(buyerInfo)
     // count for number of successful transactions
-    let txCount
+    let txCount = 0
     // update transactions
     for (let item of req.body.tx) {
       let txHash = item.txHash

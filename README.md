@@ -42,6 +42,7 @@ The terminal will track the server actions. Feel free to check the log files in 
 * [Data Structure](doc/data.md)
 * [Service Interfaces](doc/handler.md)
 * [Status Code](doc/status.md)
+* [Contract API](doc/contract.md)
 
 ### Issues & Updates
 

@@ -28,7 +28,6 @@ redisClient.msetAsync(
   'global:txNum', globalVar.txNum,
   'global:poolNum', globalVar.poolNum,
   'global:blockHeight', globalVar.blockHeight,
-  'global:nonce', globalVar.nonce,
   'global:powerUnit', globalVar.powerUnit
 ).then(function (reply) {
   logger.action('redis global strings status: ' + reply)

@@ -123,7 +123,7 @@ All CRUD operations conducted via RESTful HTTP requests.
     "request": {
         "_method": "DELETE",
         "_path": "/usr/logout",
-        "sessionId": 
+        "sessionId": ""
     },
     "reponse": {
         "status": "",
@@ -195,22 +195,18 @@ All CRUD operations conducted via RESTful HTTP requests.
         "_path": "/tx/delivery",
         "sessionId": "",
         "timestampSell": "",
-        "tx": [
-            {
-                "timestampExpire": "",
-                "power": "",
-                "value": "",
-                "amount": "",
-                "type": "",
-                "inputData": ""
-            }
-        ]
+        "timestampExpire": "",
+        "power": "",
+        "value": "",
+        "amount": "",
+        "type": "",
+        "inputData": ""
     },
     "reponse": {
         "status": "",
         "msg": "",
         "sessionId": "",
-        "results": [
+        "result": [
             {
                 "txHash": "",
                 "status": "waiting",
@@ -251,7 +247,7 @@ All CRUD operations conducted via RESTful HTTP requests.
         "status": "",
         "msg": "",
         "sessionId": "",
-        "results": [
+        "result": [
             {
                 "txHash": "",
                 "result": "succeed/failed"

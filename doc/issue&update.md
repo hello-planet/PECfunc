@@ -11,7 +11,7 @@
 - Essential optimization.
 	We need to cut down potential stupid data processing logics :P
 
-### Feature Updates
+### Updates
 - 2019.3.5 Add customized status code.
 	For the corresponding information in different situations.
   

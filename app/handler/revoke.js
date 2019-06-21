@@ -29,7 +29,6 @@ module.exports = async function (req, res) {
 
     // fetch tx in user's list
     let txExisting
-    // TODO
     await redisClient.sismemberAsync('usr:' + sellerAccount + ':delivery', out.txId).then(function (reply) {
       txExisting = reply
     }).catch(function (err) {

@@ -12,7 +12,6 @@ module.exports = {
     poolNum: 0,
     txNum: 0,
     blockHeight: 1,
-    nonce: '1117',
     powerUnit: 0.5
   },
   password: {

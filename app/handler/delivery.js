@@ -28,8 +28,7 @@ module.exports = async function (req, res) {
     }
     let globalVar = {
       powerUnit: '',
-      blockHeight: '',
-      nonce: ''
+      blockHeight: ''
     }
     // fetch necessary variables for transactions
     await redisClient.getAsync('id:' + out.sessionId).then(function (reply) {
@@ -56,96 +55,86 @@ module.exports = async function (req, res) {
     }).catch(function (err) {
       logger.error('get global blockHeight error: ' + err)
     })
-    await redisClient.getAsync('global:nonce').then(function (reply) {
-      // console.log('get global nonce status: ' + reply)
-      globalVar.nonce = reply
-    }).catch(function (err) {
-      logger.error('get global nonce error: ' + err)
-    })
     // write transactions
-    for (let tx of req.body.tx) {
-      // TODO txHash generation remained or not?
-      let txHash = crypto.createHash('sha256').update(sellerInfo.account + new Date().getTime()).digest('hex')
-      await redisClient.hmsetAsync('tx:' + txHash, [
-        'txHash', txHash,
-        'status', 'waiting',
-        'blockHeight', globalVar.blockHeight,
-        'timestampSell', req.body.timestampSell,
-        'timestampBuy', '',
-        'timestampExpire', tx.timestampExpire,
-        'power', tx.power,
-        'value', 0,
-        'amount', tx.amount,
-        'type', tx.type,
-        'from', '',
-        'to', sellerInfo.toAdd,
-        // TODO determine whether remain the field $(nonce)
-        'nonce', globalVar.nonce,
-        'inputData', tx.inputData
-      ]).then(function (reply) {
-        // console.log('set trans hash status: ' + reply)
+    // Use timestampGen to generate the txHash
+    let txHash = crypto.createHash('sha256').update(sellerInfo.account + req.body.timestampGen).digest('hex')
+    await redisClient.hmsetAsync('tx:' + txHash, [
+      'txHash', txHash,
+      'status', 'waiting',
+      'blockHeight', globalVar.blockHeight,
+      'timestampSell', req.body.timestampSell,
+      'timestampBuy', '',
+      'timestampExpire', req.body.timestampExpire,
+      'power', req.body.power,
+      'value', 0,
+      'amount', req.body.amount,
+      'type', req.body.type,
+      'from', '',
+      'to', sellerInfo.toAdd,
+      'inputData', req.body.inputData
+    ]).then(function (reply) {
+      // console.log('set trans hash status: ' + reply)
+    }).catch(function (err) {
+      logger.error('set trans hash error: ' + err)
+    })
+    if (req.body.value === 0 || req.body.value === null || req.body.value === '') {
+      await redisClient.hsetAsync('tx:' + txHash, 'value', req.body.amount * globalVar.powerUnit).then(function (reply) {
+        // console.log('set tx value based on amount status(0 means passed): ' + reply)
       }).catch(function (err) {
-        logger.error('set trans hash error: ' + err)
+        logger.error('set tx value based on amount error: ' + err)
       })
-      if (tx.value === 0 || tx.value === null || tx.value === '') {
-        await redisClient.hsetAsync('tx:' + txHash, 'value', tx.amount * globalVar.powerUnit).then(function (reply) {
-          // console.log('set tx value based on amount status(0 means passed): ' + reply)
-        }).catch(function (err) {
-          logger.error('set tx value based on amount error: ' + err)
-        })
-      } else {
-        await redisClient.hsetAsync('tx:' + txHash, 'value', tx.value).then(function (reply) {
-          // console.log('set tx value based on value status(0 means passed): ' + reply)
-        }).catch(function (err) {
-          logger.error('set tx value based on value error: ' + err)
-        })
-      }
-
-      // change associated account's variables
-      await redisClient.hincrbyAsync('usr:' + sellerInfo.account, 'deliveryNum', 1).then(function (reply) {
-        // console.log('increment usr\'s tx number status:' + reply)
+    } else {
+      await redisClient.hsetAsync('tx:' + txHash, 'value', req.body.value).then(function (reply) {
+        // console.log('set tx value based on value status(0 means passed): ' + reply)
       }).catch(function (err) {
-        logger.error('increment usr\'s tx number error:' + err)
-      })
-      await redisClient.saddAsync('usr:' + sellerInfo.account + ':delivery', txHash).then(function (reply) {
-        // console.log('add usr\'s tx list status: ' + reply)
-      }).catch(function (err) {
-        logger.error('add usr\'s tx list error: ' + err)
-      })
-
-      // change global variables
-      await redisClient.incrAsync('global:txNum').then(function (reply) {
-        // console.log('increment global tx number status: ' + reply)
-      }).catch(function (err) {
-        logger.error('increment global tx number error: ' + err)
-      })
-      await redisClient.incrAsync('global:poolNum').then(function (reply) {
-        // console.log('increment global pool number status: ' + reply)
-      }).catch(function (err) {
-        logger.error('increment global pool number error: ' + err)
-      })
-      await redisClient.saddAsync('global:txList', txHash).then(function (reply) {
-        // console.log('add global tx list status: ' + reply)
-      }).catch(function (err) {
-        logger.error('add global tx list error: ' + err)
-      })
-      await redisClient.saddAsync('global:poolList', txHash).then(function (reply) {
-        // console.log('add global pool list status: ' + reply)
-      }).catch(function (err) {
-        logger.error('add global pool list error: ' + err)
-      })
-      // generate res.out
-      await redisClient.hgetallAsync('tx:' + txHash).then(function (reply) {
-        if (reply) {
-          // console.log('fetch tx hash back status: OK')
-          reply['msg'] = 'succeed'
-          out.result.push(reply)
-        }
-      }).catch(function (err) {
-        logger.error('fetch tx hash back error: ' + err)
+        logger.error('set tx value based on value error: ' + err)
       })
     }
-    logger.action(sellerInfo.account + ' deliveried ' + req.body.tx.length + ' transactions.')
+
+    // change associated account's variables
+    await redisClient.hincrbyAsync('usr:' + sellerInfo.account, 'deliveryNum', 1).then(function (reply) {
+      // console.log('increment usr\'s tx number status:' + reply)
+    }).catch(function (err) {
+      logger.error('increment usr\'s tx number error:' + err)
+    })
+    await redisClient.saddAsync('usr:' + sellerInfo.account + ':delivery', txHash).then(function (reply) {
+      // console.log('add usr\'s tx list status: ' + reply)
+    }).catch(function (err) {
+      logger.error('add usr\'s tx list error: ' + err)
+    })
+
+    // change global variables
+    await redisClient.incrAsync('global:txNum').then(function (reply) {
+      // console.log('increment global tx number status: ' + reply)
+    }).catch(function (err) {
+      logger.error('increment global tx number error: ' + err)
+    })
+    await redisClient.incrAsync('global:poolNum').then(function (reply) {
+      // console.log('increment global pool number status: ' + reply)
+    }).catch(function (err) {
+      logger.error('increment global pool number error: ' + err)
+    })
+    await redisClient.saddAsync('global:txList', txHash).then(function (reply) {
+      // console.log('add global tx list status: ' + reply)
+    }).catch(function (err) {
+      logger.error('add global tx list error: ' + err)
+    })
+    await redisClient.saddAsync('global:poolList', txHash).then(function (reply) {
+      // console.log('add global pool list status: ' + reply)
+    }).catch(function (err) {
+      logger.error('add global pool list error: ' + err)
+    })
+    // generate res.out
+    await redisClient.hgetallAsync('tx:' + txHash).then(function (reply) {
+      if (reply) {
+        // console.log('fetch tx hash back status: OK')
+        reply['msg'] = 'succeed'
+        out.result.push(reply)
+      }
+    }).catch(function (err) {
+      logger.error('fetch tx hash back error: ' + err)
+    })
+    logger.action(sellerInfo.account + ' deliveried one transaction.')
   } else {
     out.status = 834
     out.msg = statusCode.illegal['834']

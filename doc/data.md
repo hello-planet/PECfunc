@@ -2,7 +2,7 @@
 
 ###  Global
 
-*usrNum*, *poolNum*, *txNum*, *blockHeight*, *nonce* and *powerUnit* come to be **String** type. *usrList*, *poolList*, *finishList*, *txList* are stored in **Set** type.
+*usrNum*, *poolNum*, *txNum*, *blockHeight* and *powerUnit* come to be **String** type. *usrList*, *poolList*, *finishList*, *txList* are stored in **Set** type.
 
 ```json
 {
@@ -16,7 +16,6 @@
         "revokeList": [],
         "txList": [],
         "blockHeight": "",
-        "nonce": "",
         "powerUnit": ""
     }
 }
@@ -62,7 +61,6 @@ All txinfo associated with one transaction will be stored in **Hash** type. The 
         "type": "solar/water/wind",
         "from": "",
         "to": "",
-        "nonce": "",
         "inputData": ""
     }
 }
