@@ -31,6 +31,7 @@ exports.testCon = async function () {
 
 // show global variables
 // TODO need a safer administration permission. Now a temprary solution
+// TODO need to modify the admin pw source
 exports.show = async function (req, res) {
   let redisClient = redisServer.createClient(redisCfg)
   let out = {
@@ -150,6 +151,7 @@ exports.save = async function () {
 
 // show pool txs detials
 // for simulating trade use only
+// TODO need to modify the admin pw source
 exports.pool = async function (req, res) {
   let redisClient = redisServer.createClient(redisCfg)
   let out = {

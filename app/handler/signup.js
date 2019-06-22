@@ -24,7 +24,7 @@ module.exports = async function (req, res) {
     out.msg = statusCode.illegal['821']
   } else {
     if (pwDemand.moderate.pattern.test(req.body.password)) {
-      // TODO modify the user address generation to suit ETH.
+      // TODO modify the user sk, pk, addr
       let address = crypto.createHash('sha256').update(req.body.account + req.body.password).digest('hex')
       let password = crypto.createHash('sha256').update(req.body.password).digest('hex')
 
@@ -33,10 +33,13 @@ module.exports = async function (req, res) {
         'account', req.body.account,
         'password', password,
         'balance', 100,
+        'storage', 100,
+        'sk', 0,
+        'pk', 0,
         'address', address,
         'deliveryNum', 0,
         'purchaseNum', 0,
-        'revokeNum', 0
+        'invalidNum', 0
       ]).then(function (reply) {
         // console.log('usr main list status: ' + reply)
       }).catch(function (err) {
@@ -56,10 +59,16 @@ module.exports = async function (req, res) {
         logger.error('usr purchase list error: ' + err)
       })
 
-      await redisClient.saddAsync('usr:' + req.body.account + ':revoke', 'default').then(function (reply) {
-        // console.log('usr revoke list status: ' + reply)
+      await redisClient.saddAsync('usr:' + req.body.account + ':demand', 'default').then(function (reply) {
+        // console.log('usr demand list status: ' + reply)
       }).catch(function (err) {
-        logger.error('usr revoke list error: ' + err)
+        logger.error('usr demand list error: ' + err)
+      })
+
+      await redisClient.saddAsync('usr:' + req.body.account + ':invalid', 'default').then(function (reply) {
+        // console.log('usr invalid list status: ' + reply)
+      }).catch(function (err) {
+        logger.error('usr invalid list error: ' + err)
       })
 
       // set index from address to account

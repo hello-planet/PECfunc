@@ -74,6 +74,14 @@ contract CommodityOperator is CommodityPool {
         emit NewTx(txId);
     }
     
+    function demandTx() public {
+        
+    }
+    
+    function addTx() private {
+        
+    }
+    
     // to purchase an existing tx
     function purchaseTx(bytes32 _txId) public payable checkBalance(_txId){
         Trans storage tx = txPool[_txId];
@@ -84,6 +92,14 @@ contract CommodityOperator is CommodityPool {
         poolNum --;
         finishNum ++;
         emit TxSold(_txId);
+    }
+    
+    function sellTx() public {
+        
+    }
+    
+    function confirmTx() private {
+        
     }
     
     // to revoke a delivered tx

@@ -49,13 +49,18 @@ redisClient.saddAsync('global:poolList', 'default').then(function (reply) {
 }).catch(function (err) {
   logger.error('redis global poolList set error: ' + err)
 })
+redisClient.saddAsync('global:boardList', 'default').then(function (reply) {
+  logger.action('redis global boardList set status: ' + reply)
+}).catch(function (err) {
+  logger.error('redis global boardList set error: ' + err)
+})
 redisClient.saddAsync('global:finishList', 'default').then(function (reply) {
   logger.action('redis global finishList set status: ' + reply)
 }).catch(function (err) {
   logger.error('redis global finishList set error: ' + err)
 })
-redisClient.saddAsync('global:revokeList', 'default').then(function (reply) {
-  logger.action('redis global revokeList set status: ' + reply)
+redisClient.saddAsync('global:invalidList', 'default').then(function (reply) {
+  logger.action('redis global invalidList set status: ' + reply)
 }).catch(function (err) {
   logger.error('redis global revokeList set error: ' + err)
 })

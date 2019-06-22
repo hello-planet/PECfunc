@@ -30,10 +30,14 @@ function signup (redisClient, usr, password) {
   redisClient.hmsetAsync('usr:' + usr, [
     'account', usr,
     'password', password,
-    'balance', 100,
+    'balance', 10000,
+    'storage', 10000,
+    'sk', 0,
+    'pk', 0,
     'address', address,
     'deliveryNum', 0,
-    'purchaseNum', 0
+    'purchaseNum', 0,
+    'invalidNum', 0
   ]).then(function (reply) {
     // console.log('usr main list status: ' + reply)
   }).catch(function (err) {
@@ -48,6 +52,16 @@ function signup (redisClient, usr, password) {
     // console.log('usr purchase list status: ' + reply)
   }).catch(function (err) {
     logger.error('usr purchase list error: ' + err)
+  })
+  redisClient.saddAsync('usr:' + usr + ':demand', 'default').then(function (reply) {
+    // console.log('usr demand list status: ' + reply)
+  }).catch(function (err) {
+    logger.error('usr demand list error: ' + err)
+  })
+  redisClient.saddAsync('usr:' + usr + ':invalid', 'default').then(function (reply) {
+    // console.log('usr invalid list status: ' + reply)
+  }).catch(function (err) {
+    logger.error('usr invalid list error: ' + err)
   })
   // set index from address to account
   redisClient.setAsync('addr:' + address, usr).then(function (reply) {

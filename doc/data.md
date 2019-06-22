@@ -12,8 +12,9 @@
         "txNum": "",
         "usrList": [],
         "poolList": [],
+        "boardList": [],
         "finishList": [],
-        "revokeList": [],
+        "invalidList": [],
         "txList": [],
         "blockHeight": "",
         "powerUnit": ""
@@ -23,7 +24,7 @@
 
 ### Account
 
-Partial usrinfo associated with one account will be stored in **Hash** type, except for *deliveryList* and *purchaseList*, which shown in **Set** type. Corresponding keys about an account are `usr:$account`, `usr:$account:deliveryList` and `usr:$account:purchaseList` respectively.
+Partial usrinfo associated with one account will be stored in **Hash** type, except for *deliveryList* and *purchaseList*, which shown in **Set** type. Corresponding keys about an account are `usr:$account`, `usr:$account:delivery` and `usr:$account:purchase` respectively.
 
 ```json
 {
@@ -31,13 +32,17 @@ Partial usrinfo associated with one account will be stored in **Hash** type, exc
     	"account": "",
     	"password": "",
     	"balance": "",
-    	"address": "(uint160)",
+        "storage": "",
+        "sk": "(32bytes)",
+        "pk": "(64bytes)",
+    	"address": "(20bytes)",
     	"deliveryNum": "",
     	"purchaseNum": "",
-        "revokeNum": "",
+        "invalidNum": "",
     	"deliveryList": [],
         "purchaseList": [],
-        "revokeList": []
+        "demandList": [],
+        "invalidList": []
     }
 }
 ```

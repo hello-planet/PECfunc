@@ -1,6 +1,6 @@
 /**
  * purchase operation
- * status: bug remain fixed
+ * status: passed
  */
 
 module.exports = async function (req, res) {

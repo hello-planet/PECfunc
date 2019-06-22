@@ -78,7 +78,7 @@ module.exports = {
     password: 'admin'
   },
   transaction: {
-    status: ['waiting', 'succeeded', 'revoked'],
+    status: ['waiting', 'succeeded', 'revoked', 'demand', 'expired'],
     type: ['solar', 'water', 'wind']
   },
   testUsr: {

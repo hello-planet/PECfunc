@@ -43,12 +43,12 @@ module.exports = async function (req, res) {
       })
       if (txStatus === 'waiting') {
         // usr
-        await redisClient.hincrbyAsync('usr:' + sellerAccount, 'revokeNum', 1).then(function (reply) {
+        await redisClient.hincrbyAsync('usr:' + sellerAccount, 'invalidNum', 1).then(function (reply) {
           // console.log('increment usr\'s tx number status:' + reply)
         }).catch(function (err) {
           logger.error('increment usr\'s tx number error:' + err)
         })
-        await redisClient.saddAsync('usr:' + sellerAccount + ':revoke', out.txId).then(function (reply) {
+        await redisClient.saddAsync('usr:' + sellerAccount + ':invalid', out.txId).then(function (reply) {
           // console.log('add usr\'s tx list status: ' + reply)
         }).catch(function (err) {
           logger.error('add usr\'s tx list error: ' + err)
@@ -77,10 +77,10 @@ module.exports = async function (req, res) {
         }).catch(function (err) {
           logger.error('remove tx from global pool list error: ' + err)
         })
-        await redisClient.saddAsync('global:revokeList', out.txId).then(function (reply) {
-          // console.log('append tx to global revoke list status: ' + reply)
+        await redisClient.saddAsync('global:invalidList', out.txId).then(function (reply) {
+          // console.log('append tx to global invalid list status: ' + reply)
         }).catch(function (err) {
-          logger.error('append tx to global revoke list error: ' + err)
+          logger.error('append tx to global invalid list error: ' + err)
         })
         out.status = 735
         out.msg = statusCode.success['735']
